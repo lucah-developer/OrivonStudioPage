@@ -4,7 +4,7 @@ import icono from "../assets/Icono.png";
 
 export default function Hero() {
   return (
-    <section className="pt-32 pb-24 bg-[var(--bg)] overflow-hidden">
+    <section className="pt-32 pb-24 bg-[var(--bg)] overflow-hidden h-screen">
       <div className="max-w-7xl mx-auto px-6 md:px-10 flex flex-col-reverse lg:flex-row items-center gap-16">
         {/* Texto */}
         <div className="flex-1 text-center lg:text-left" data-aos="fade-right">

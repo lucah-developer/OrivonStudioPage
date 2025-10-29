@@ -11,7 +11,7 @@ import icono from "../assets/LogoApaisado.svg";
 
 const NAV_LINKS = [
   { href: "#services", label: "Servicios", Icon: FiLayers },
-  { href: "#portfolio", label: "Portfolio", Icon: FiGrid },
+  { href: "portfolio", label: "Portfolio", Icon: FiGrid },
   { href: "#process", label: "Cómo trabajamos", Icon: FiSettings },
   { href: "#contact", label: "Contacto", Icon: FiMail },
 ];
