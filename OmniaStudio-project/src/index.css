@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS variables que usaremos */
+:root {
+  --bg: #faf2e8;
+  --neutral-100: #f7f3ee;
+  --text-primary: #0b2c4a;
+  --accent-1: #7c3aed;
+  --accent-2: #ff9a2a;
+  --accent-3: #00a78e;
+}
+
+/* tipografías fallback */
+html,
+body {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+/* utilidades útiles */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-5 py-2 rounded-lg text-white font-medium;
+  background: var(--accent-1);
+}
