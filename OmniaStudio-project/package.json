@@ -10,6 +10,7 @@
     "optimize:svgs": "svgo -f src/assets --ext .svg"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "aos": "^2.3.4",
     "clsx": "^2.1.1",
     "embla-carousel-autoplay": "^8.6.0",

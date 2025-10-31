@@ -105,7 +105,7 @@ export default function Navbar() {
 
             {/* CTA */}
             <a
-              href="#contact"
+              href="/#contact"
               className="ml-4 relative inline-flex items-center justify-center px-4 py-2 rounded-full text-white font-medium shadow-sm overflow-hidden transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[var(--accent-1)]/25"
               style={{ background: "var(--accent-1)" }}
             >

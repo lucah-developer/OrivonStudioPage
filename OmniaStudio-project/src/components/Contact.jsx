@@ -1,18 +1,9 @@
 import React, { useState } from "react";
-// import emailjs from "@emailjs/browser";
+import emailjs from "@emailjs/browser";
 
-/**
- * Reemplazá los valores:
- * - SERVICE_ID -> tu service id (EmailJS)
- * - TEMPLATE_ID -> tu template id
- * - PUBLIC_KEY -> tu public key (user id)
- *
- * Alternativa: en lugar de EmailJS, podés usar una API propia y hacer fetch POST.
- */
-
-const SERVICE_ID = "YOUR_SERVICE_ID";
-const TEMPLATE_ID = "YOUR_TEMPLATE_ID";
-const PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+const SERVICE_ID = "service_r5sxqkl";
+const TEMPLATE_ID = "template_2bmx2jv";
+const PUBLIC_KEY = "d7XuVC7rlvoQ-olEC";
 
 const PROJECT_TYPES = [
   "Landing page",
@@ -33,7 +24,7 @@ export default function Contact() {
     message: "",
   });
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(null); // { type: 'success' | 'error', text: '' }
+  const [status, setStatus] = useState(null);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -48,7 +39,6 @@ export default function Contact() {
       });
       return false;
     }
-    // simple email regex
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRe.test(form.email)) {
       setStatus({ type: "error", text: "Ingresá un correo válido." });
@@ -73,7 +63,6 @@ export default function Contact() {
         message: form.message,
       };
 
-      // Si usás EmailJS:
       await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
 
       setStatus({
@@ -99,9 +88,24 @@ export default function Contact() {
     }
   }
 
+  // Genera el link de WhatsApp con mensaje predefinido
+  const whatsappLink = `https://wa.me/5492604309716?text=Hola!%20Me%20comunico%20desde%20Orivon%20Studio%20para%20solicitar%20un%20presupuesto%20de%20${encodeURIComponent(
+    form.projectType || "un proyecto web"
+  )}%20`;
+
   return (
-    <section id="contact" className="py-20 bg-white">
-      <div className="max-w-4xl mx-auto px-6 md:px-8">
+    <section id="contact" className="relative py-20 bg-bg overflow-hidden">
+      {/* Gradient sutil desde abajo hacia arriba */}
+      <div
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        // style={{
+        //   background:
+        //     "linear-gradient(to top, rgba(124, 58, 237, 0.2), rgba(255, 154, 42, 0.2), rgba(250, 242, 232, 0))",
+        //   zIndex: 0,
+        // }}
+      ></div>
+
+      <div className="relative max-w-4xl mx-auto px-6 md:px-8 z-10">
         <h2
           className="text-3xl font-heading font-bold text-center text-[var(--text-primary)] mb-6"
           data-aos="fade-up"
@@ -121,7 +125,7 @@ export default function Contact() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-[var(--neutral-100)] p-6 rounded-2xl shadow-sm"
+          className="bg-[var(--neutral-100)] p-6 rounded-2xl shadow-sm relative z-10"
           data-aos="fade-up"
           data-aos-delay="140"
           noValidate
@@ -140,6 +144,7 @@ export default function Contact() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Nombre */}
             <label className="flex flex-col">
               <span className="text-sm text-gray-600">Nombre y apellido *</span>
               <input
@@ -151,6 +156,7 @@ export default function Contact() {
               />
             </label>
 
+            {/* Email */}
             <label className="flex flex-col">
               <span className="text-sm text-gray-600">Email *</span>
               <input
@@ -163,6 +169,7 @@ export default function Contact() {
               />
             </label>
 
+            {/* Empresa / Proyecto */}
             <label className="flex flex-col">
               <span className="text-sm text-gray-600">Empresa / Proyecto</span>
               <input
@@ -173,6 +180,7 @@ export default function Contact() {
               />
             </label>
 
+            {/* Tipo de proyecto */}
             <label className="flex flex-col">
               <span className="text-sm text-gray-600">Tipo de proyecto *</span>
               <select
@@ -191,19 +199,7 @@ export default function Contact() {
               </select>
             </label>
 
-            <label className="flex flex-col">
-              <span className="text-sm text-gray-600">
-                Presupuesto aproximado
-              </span>
-              <input
-                name="budget"
-                value={form.budget}
-                onChange={handleChange}
-                className="mt-2 px-3 py-2 rounded-md border border-gray-200 bg-white"
-                placeholder="Ej: ARS 150000"
-              />
-            </label>
-
+            {/* Mensaje */}
             <label className="flex flex-col md:col-span-2">
               <span className="text-sm text-gray-600">Mensaje / Brief</span>
               <textarea
@@ -216,7 +212,8 @@ export default function Contact() {
             </label>
           </div>
 
-          <div className="mt-6 flex items-center gap-4">
+          {/* Botones */}
+          <div className="mt-6 flex items-center gap-4 flex-wrap">
             <button
               type="submit"
               disabled={loading}
@@ -229,10 +226,12 @@ export default function Contact() {
             </button>
 
             <a
-              href="mailto:info@tuemail.com"
-              className="text-sm text-gray-600 hover:text-[var(--text-primary)]"
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-green-500 text-white font-semibold shadow-sm transition hover:bg-green-600"
             >
-              O escribinos a info@tuemail.com
+              📱 Contactar por WhatsApp
             </a>
           </div>
         </form>
