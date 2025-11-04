@@ -8,6 +8,8 @@ import {
   FiMail,
 } from "react-icons/fi";
 import icono from "../assets/LogoApaisado.svg";
+import logo from "../assets/Icono.png";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const NAV_LINKS = [
   { href: "/#services", label: "Servicios", Icon: FiLayers },
@@ -20,6 +22,29 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const panelRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Función para manejar navegación con anclas
+  const handleAnchorClick = (e, href) => {
+    e.preventDefault();
+    setOpen(false);
+
+    const [path, hash] = href.split("#");
+
+    if (path && location.pathname !== path) {
+      navigate(path, { replace: true });
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 400);
+    } else if (hash) {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate(path);
+    }
+  };
 
   // Inyectar estilos para ocultar scrollbar (si no los tenés)
   useEffect(() => {
@@ -35,14 +60,12 @@ export default function Navbar() {
     }
   }, []);
 
-  // Detectar scroll: uso IntersectionObserver con #hero si existe (más robusto)
+  // Detectar scroll: uso IntersectionObserver con #hero si existe
   useEffect(() => {
     const hero = document.getElementById("hero");
     if (hero && "IntersectionObserver" in window) {
       const io = new IntersectionObserver(
-        (entries) => {
-          setScrolled(!entries[0].isIntersecting);
-        },
+        (entries) => setScrolled(!entries[0].isIntersecting),
         { root: null, threshold: 0.01 }
       );
       io.observe(hero);
@@ -98,7 +121,7 @@ export default function Navbar() {
               <img
                 src={icono}
                 alt="Orivon Studio"
-                className="h-8 md:h-10 w-auto object-contain"
+                className="h-full w-auto object-contain"
               />
             </a>
 
@@ -108,15 +131,14 @@ export default function Navbar() {
                 <a
                   key={href}
                   href={href}
-                  className={`relative group px-1 py-2 transition-colors duration-300 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-1)]/20 rounded`}
+                  onClick={(e) => handleAnchorClick(e, href)}
+                  className="relative group px-1 py-2 transition-colors duration-300 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-1)]/20 rounded"
                 >
-                  <span
-                    className={`inline-block transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[var(--accent-1)] group-hover:to-[var(--accent-2)] group-hover:bg-clip-text group-hover:text-transparent`}
-                  >
+                  <span className="inline-block transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[var(--accent-1)] group-hover:to-[var(--accent-2)] group-hover:bg-clip-text group-hover:text-transparent">
                     {label}
                   </span>
                   <span
-                    className={`absolute left-0 -bottom-0.5 h-0.5 w-0 bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] rounded-full transition-all duration-300 ease-out group-hover:w-full`}
+                    className="absolute left-0 -bottom-0.5 h-0.5 w-0 bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] rounded-full transition-all duration-300 ease-out group-hover:w-full"
                     aria-hidden="true"
                   />
                 </a>
@@ -125,6 +147,7 @@ export default function Navbar() {
               {/* CTA */}
               <a
                 href="/#contact"
+                onClick={(e) => handleAnchorClick(e, "/#contact")}
                 className="ml-4 relative inline-flex items-center justify-center px-4 py-2 rounded-full text-white font-medium shadow-sm overflow-hidden transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[var(--accent-1)]/25"
                 style={{ background: "var(--accent-1)" }}
               >
@@ -137,6 +160,7 @@ export default function Navbar() {
             <div className="md:hidden flex items-center gap-3">
               <a
                 href="#contact"
+                onClick={(e) => handleAnchorClick(e, "/#contact")}
                 className="inline-block p-2 rounded-md"
                 aria-label="Contacto"
               >
@@ -172,7 +196,7 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
       >
-        {/* overlay (detrás del panel) - z lower que el panel */}
+        {/* overlay */}
         <div
           className={`fixed inset-0 bg-black/60 transition-opacity duration-300 z-40 ${
             open
@@ -181,7 +205,7 @@ export default function Navbar() {
           }`}
         />
 
-        {/* panel principal - fuera del header, z-50, full-screen */}
+        {/* panel principal */}
         <div
           ref={panelRef}
           className={`fixed inset-0 z-50 transform transition-transform duration-300 ${
@@ -189,12 +213,11 @@ export default function Navbar() {
           }`}
         >
           <div className="flex flex-col h-full w-full bg-[var(--neutral-100)] shadow-2xl">
-            {/* Header del panel */}
-            <div className="px-6 py-5 flex items-center justify-between border-b border-gray-200">
+            <div className="px-3  flex items-center justify-between border-b border-gray-200">
               <img
-                src={icono}
+                src={logo}
                 alt="Orivon Studio"
-                className="h-10 w-auto object-contain"
+                className="h-20 w-auto object-contain"
               />
               <button
                 onClick={() => setOpen(false)}
@@ -205,29 +228,27 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Contenido scrollable del panel */}
             <nav className="px-6 py-6 flex-1 overflow-y-auto no-scrollbar flex flex-col gap-6">
               {NAV_LINKS.map(({ href, label, Icon }) => (
                 <a
                   key={href}
-                  onClick={() => setOpen(false)}
                   href={href}
+                  onClick={(e) => handleAnchorClick(e, href)}
                   className="flex items-center gap-4 py-3 px-2 rounded-md w-full text-left hover:bg-white/60 transition"
                 >
-                  {Icon ? (
+                  {Icon && (
                     <Icon className="text-2xl text-[var(--text-primary)]" />
-                  ) : null}
+                  )}
                   <span className="text-lg font-semibold text-[var(--text-primary)]">
                     {label}
                   </span>
                 </a>
               ))}
 
-              {/* CTA ancho */}
               <div className="w-full mt-2">
                 <a
-                  href="#contact"
-                  onClick={() => setOpen(false)}
+                  href="/#contact"
+                  onClick={(e) => handleAnchorClick(e, "/#contact")}
                   className="block w-full text-center px-6 py-3 rounded-full text-white font-semibold transform transition hover:scale-105"
                   style={{ background: "var(--accent-1)" }}
                 >
@@ -235,7 +256,6 @@ export default function Navbar() {
                 </a>
               </div>
 
-              {/* separador y contacto */}
               <div className="w-full border-t border-gray-200 pt-4 mt-4 text-sm text-gray-600">
                 <p className="mb-2">También podés escribirnos por:</p>
                 <div className="flex items-center gap-3">
@@ -243,7 +263,7 @@ export default function Navbar() {
                     href="mailto:info@orivonstudio.com"
                     className="text-[var(--text-primary)]"
                   >
-                    info@orivonstudio.com
+                    orivonstudio@gmail.com
                   </a>
                   <span className="text-gray-400">·</span>
                   <a
@@ -257,25 +277,24 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {/* redes al final */}
               <div className="mt-auto pb-8">
                 <div className="flex gap-4 mt-4">
                   <a
-                    href="https://www.instagram.com/"
+                    href="https://www.instagram.com/orivonstudio/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[var(--text-primary)]"
                   >
                     Instagram
                   </a>
-                  <a
+                  {/* <a
                     href="https://www.linkedin.com/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[var(--text-primary)]"
                   >
                     LinkedIn
-                  </a>
+                  </a> */}
                 </div>
               </div>
             </nav>

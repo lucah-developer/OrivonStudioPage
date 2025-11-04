@@ -34,7 +34,7 @@ export default function Footer() {
             Servicios
           </a>
           <a
-            href="#portfolio"
+            href="/portfolio"
             className="hover:text-[var(--accent-1)] transition"
           >
             Portfolio
@@ -51,7 +51,7 @@ export default function Footer() {
             href="mailto:info@orivonstudio.com"
             className="hover:text-[var(--accent-1)] transition"
           >
-            info@orivonstudio.com
+            orivonstudio2022@gmail.com
           </a>
           <a
             href="https://wa.me/5492604309716"
@@ -64,21 +64,21 @@ export default function Footer() {
 
           <div className="flex gap-4 mt-2">
             <a
-              href="https://www.instagram.com/"
+              href="https://www.instagram.com/orivonstudio/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[var(--accent-1)] transition"
             >
               Instagram
             </a>
-            <a
+            {/* <a
               href="https://www.linkedin.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[var(--accent-1)] transition"
             >
               LinkedIn
-            </a>
+            </a> */}
           </div>
         </div>
       </div>

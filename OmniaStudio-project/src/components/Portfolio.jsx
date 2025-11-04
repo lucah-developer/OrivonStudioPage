@@ -23,8 +23,11 @@ import { images } from "../assets/Tourist/index";
 import { imagesPulso } from "../assets/Pulsomarkt/index";
 import { imagesNoSense } from "../assets/NoSense/index";
 import { imagesgym } from "../assets/GymOasis/index";
+import { imagesddec } from "../assets/DDEC/index";
+import { imagesturnify } from "../assets/Turnify/index";
+import video from "../assets/Turnify/video.mp4";
 
-/* ====== DATA mejorada: agregué client, year, role, tech, highlights ====== */
+/* ====== DATA (sin cambios de imports de images) ====== */
 const ITEMS = [
   {
     id: 1,
@@ -37,7 +40,6 @@ const ITEMS = [
     image: imagesNoSense?.uno,
     desc: "E-commerce con catálogo, filtros, modal de producto, carrito y flujo de pedido vía WhatsApp.",
     images: [imagesNoSense?.uno],
-    // link: "/projects/nosense",
     tech: ["React", "TailwindCSS", "WhatsApp API", "Cloudinary"],
     features: [
       { key: "shop", label: "Carrito & checkout", icon: "FiShoppingCart" },
@@ -105,19 +107,20 @@ const ITEMS = [
   },
   {
     id: 4,
-    title: "Turnify - Reservas",
+    title: "Turnify - Reservas programadas",
     category: "App",
     type: "Booking",
     client: "Turnify",
     year: 2024,
-    role: "Desarrollador Frontend",
-    image: "/portfolio/turnify-1.jpg",
+    role: "Desarrollo App",
+    image: imagesturnify?.uno,
     desc: "Sistema de reservas con agendamiento por WhatsApp y panel administrativo básico.",
-    images: ["/portfolio/turnify-1.jpg"],
-    link: "/projects/turnify",
+    images: [imagesturnify?.uno],
     tech: ["React", "WhatsApp Integration", "TailwindCSS"],
     features: [{ key: "booking", label: "Reservas/Agenda", icon: "FiTool" }],
     highlights: ["Agenda por WhatsApp", "Notificaciones a usuarios"],
+    videoSrc: video || null,
+    videoPoster: imagesturnify?.uno || null,
   },
   {
     id: 5,
@@ -151,19 +154,33 @@ const ITEMS = [
   },
   {
     id: 6,
-    title: "Portfolio demo",
+    title: "D.D.E.C Empresa Constructora",
     category: "Landing",
     type: "Landing Page",
-    client: "Demo",
-    year: 2024,
-    role: "Desarrollador",
-    image: "/portfolio/demo-1.jpg",
-    desc: "Landing demo con estructura para presentar servicios y contacto.",
-    images: ["/portfolio/demo-1.jpg"],
-    link: "/projects/demo",
-    tech: ["React", "TailwindCSS"],
-    features: [{ key: "demo", label: "Demo", icon: "FiPlay" }],
-    highlights: ["Estructura modular", "Ideal para presentar servicios"],
+    client: "D.D.E.C S.R.L",
+    year: 2023,
+    role: "Desarrollo web",
+    image: imagesddec?.uno,
+    desc: "Landing page completa con servicios, proyectos con imágenes de cada construcción realizada por la empresa, formulario de contacto y diseño responsive",
+    images: [
+      imagesddec?.uno,
+      imagesddec?.dos,
+      imagesddec?.tres,
+      imagesddec?.cuatro,
+      imagesddec?.cinco,
+    ],
+    tech: ["React", "TailwindCSS", "AOS", "Javascript"],
+    features: [
+      { key: "anim", label: "Animaciones (AOS)", icon: "FiPlay" },
+      { key: "form", label: "Formulario activo", icon: "FiTool" },
+      { key: "responsive", label: "Responsive", icon: "FiSmartphone" },
+    ],
+    highlights: [
+      "Proyectos divididos por secciones ",
+      "Diseño responsive",
+      "Proyectos con carousel de imágenes",
+      "Animaciones y carousel de imágenes",
+    ],
   },
 ];
 
@@ -185,6 +202,14 @@ const ICON_MAP = {
 export default function Portfolio({ projects = ITEMS }) {
   const [active, setActive] = useState(null); // { item, startIndex }
   const [filter, setFilter] = useState("All");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 640);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const CATEGORIES = [
     "All",
@@ -195,6 +220,33 @@ export default function Portfolio({ projects = ITEMS }) {
     filter === "All"
       ? projects
       : projects.filter((it) => it.category === filter);
+
+  // reveal animation (simple)
+  useEffect(() => {
+    const els = document.querySelectorAll(".portfolio-card");
+    if (!els.length || !("IntersectionObserver" in window)) {
+      els.forEach((el) => {
+        el.classList.remove("opacity-0", "translate-y-4");
+        el.classList.add("opacity-100", "translate-y-0");
+      });
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const el = entry.target;
+          if (entry.isIntersecting) {
+            el.classList.remove("opacity-0", "translate-y-4");
+            el.classList.add("opacity-100", "translate-y-0");
+            obs.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
 
   function openLightbox(item, startIndex = 0) {
     setActive({ item, startIndex });
@@ -207,38 +259,63 @@ export default function Portfolio({ projects = ITEMS }) {
   }
 
   return (
-    <section id="portfolio" className="py-24 bg-neutral-100">
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-heading font-bold text-[var(--text-primary)]">
+    // evitar scroll horizontal inesperado
+    <section
+      id="portfolio"
+      className="py-20 md:py-24 bg-neutral-100 overflow-x-hidden"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 md:mb-8 gap-3">
+          <h2 className="text-2xl sm:text-3xl font-heading font-bold text-[var(--text-primary)]">
             Portfolio
           </h2>
 
-          <div className="flex items-center gap-3">
-            {CATEGORIES.map((c) => (
-              <button
-                key={c}
-                onClick={() => setFilter(c)}
-                className={`text-sm px-3 py-1 rounded-full focus:outline-none transition ${
-                  filter === c
-                    ? "bg-[var(--accent-1)] text-white"
-                    : "bg-gray-100 text-gray-700"
-                }`}
-                aria-pressed={filter === c}
+          {/* En mobile usamos select para evitar overflow; en desktop botones */}
+          {isMobile ? (
+            <div className="w-full sm:w-auto">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="w-full sm:w-auto text-sm px-3 py-2 rounded-md border border-gray-200 bg-white"
+                aria-label="Filtrar proyectos"
               >
-                {c}
-              </button>
-            ))}
-          </div>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 sm:gap-3">
+              {CATEGORIES.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setFilter(c)}
+                  className={`text-xs sm:text-sm px-3 py-1 rounded-full focus:outline-none transition ${
+                    filter === c
+                      ? "bg-[var(--accent-1)] text-white"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+                  aria-pressed={filter === c}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Grid: responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
           {items.map((it) => (
             <article
+              data-aos="fade-up"
               key={it.id}
-              className="group rounded-xl overflow-hidden bg-white/60 border border-transparent hover:border-[rgba(124,58,237,0.12)] shadow-sm hover:shadow-lg transition"
+              className="portfolio-card group flex flex-col h-full rounded-xl overflow-hidden bg-white/60 border border-transparent hover:border-[rgba(124,58,237,0.12)] shadow-sm hover:shadow-lg transition transform duration-200 opacity-0 translate-y-4"
             >
-              <div className="relative w-full h-56 md:h-44 lg:h-60 flex items-end">
+              {/* IMAGE */}
+              <div className="relative w-full h-48 sm:h-56 md:h-52 lg:h-60 flex items-end bg-white">
                 <button
                   onClick={() => openLightbox(it, 0)}
                   className="absolute inset-0 w-full h-full focus:outline-none"
@@ -247,42 +324,48 @@ export default function Portfolio({ projects = ITEMS }) {
                   <img
                     src={it.image}
                     alt={it.title}
-                    className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                    className="absolute inset-0 w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-300 bg-gray-50"
                     style={{ objectPosition: "center" }}
                   />
                 </button>
 
-                <div className="relative z-10 w-full bg-gradient-to-t from-black/50 to-transparent p-4 text-white text-left">
-                  <h3 className="text-lg font-semibold">{it.title}</h3>
-                  <p className="text-xs opacity-90">
+                <div className="relative z-10 w-full bg-gradient-to-t from-black/50 to-transparent p-3 sm:p-4 text-white text-left">
+                  <h3 className="text-base sm:text-lg font-semibold leading-tight">
+                    {it.title}
+                  </h3>
+                  <p className="text-[10px] sm:text-xs opacity-90">
                     {it.client ? `${it.client} • ` : ""}
                     {it.category} • {it.type}
                   </p>
                 </div>
               </div>
 
-              <div className="p-4">
-                <div className="flex flex-wrap gap-2 mb-3">
-                  <span className="inline-block text-xs px-3 py-1 rounded-full bg-[var(--accent-2)]/10 text-[var(--text-primary)]">
+              {/* CONTENT */}
+              <div className="flex flex-col flex-grow p-3 sm:p-4">
+                <div className="flex flex-wrap gap-2 mb-2">
+                  <span className="inline-block text-xs px-2 py-1 rounded-full bg-[var(--accent-2)]/10 text-[var(--text-primary)]">
                     {it.type}
                   </span>
-                  <span className="inline-block text-xs px-3 py-1 rounded-full bg-[var(--accent-3)]/10 text-[var(--text-primary)]">
+                  <span className="inline-block text-xs px-2 py-1 rounded-full bg-[var(--accent-3)]/10 text-[var(--text-primary)]">
                     {it.category}
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-600">{it.desc}</p>
+                <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                  {it.desc}
+                </p>
 
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-1 flex flex-wrap gap-2">
                   {it.features?.slice(0, 3).map((f) => (
                     <FeaturePill key={f.key} feature={f} />
                   ))}
                 </div>
 
-                <div className="mt-4 flex items-center justify-between gap-3">
+                {/* fixed bottom area */}
+                <div className="mt-auto pt-3 flex items-center justify-between gap-3">
                   <button
                     onClick={() => openLightbox(it, 0)}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-[var(--accent-1)] focus:outline-none"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-[var(--accent-1)] focus:outline-none hover:text-[var(--accent-2)] transition-colors"
                   >
                     Ver proyecto <FiExternalLink />
                   </button>
@@ -292,7 +375,7 @@ export default function Portfolio({ projects = ITEMS }) {
                       <button
                         key={String(img) + i}
                         onClick={() => openLightbox(it, i)}
-                        className="w-10 h-10 rounded overflow-hidden border border-gray-200 focus:outline-none"
+                        className="w-10 h-10 rounded overflow-hidden border border-gray-200 focus:outline-none hover:border-[var(--accent-1)] transition"
                         aria-label={`Abrir galería - imagen ${i + 1} de ${
                           it.title
                         }`}
@@ -313,17 +396,23 @@ export default function Portfolio({ projects = ITEMS }) {
         </div>
       </div>
 
-      {active && <LightboxModal active={active} onClose={closeLightbox} />}
+      {active && (
+        <LightboxModal
+          active={active}
+          onClose={closeLightbox}
+          isMobile={isMobile}
+        />
+      )}
     </section>
   );
 }
 
-/* Feature pill (pequeñas características) */
+/* Feature pill */
 function FeaturePill({ feature }) {
   const Icon = ICON_MAP[feature.icon] || FiTool;
   return (
-    <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded px-3 py-2 text-sm">
-      <IconContext.Provider value={{ size: 16 }}>
+    <div className="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded px-3 py-1 text-sm">
+      <IconContext.Provider value={{ size: 14 }}>
         <Icon />
       </IconContext.Provider>
       <span className="text-xs text-gray-700">{feature.label}</span>
@@ -331,9 +420,8 @@ function FeaturePill({ feature }) {
   );
 }
 
-/* Tech pill: para mostrar stack con icono genérico si no hay uno específico */
+/* Tech pill */
 function TechPill({ tech }) {
-  // mapeo simple para iconos comunes (extendible)
   const map = {
     React: FiCode,
     "Node.js": FiCode,
@@ -355,12 +443,16 @@ function TechPill({ tech }) {
   );
 }
 
-/* Lightbox modal con Embla */
-function LightboxModal({ active, onClose }) {
+/* Lightbox modal */
+function LightboxModal({ active, onClose, isMobile }) {
   const { item, startIndex } = active;
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "center",
+  });
   const [current, setCurrent] = useState(startIndex || 0);
   const autoplayRef = useRef(null);
+  const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => {
     if (emblaApi) {
@@ -387,17 +479,131 @@ function LightboxModal({ active, onClose }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  const hasVideo = !!item.videoSrc;
+
+  // Mobile full-screen viewer (keeps big images + toggle details; contains action buttons)
+  if (isMobile) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-stretch justify-center bg-black/80">
+        <div className="relative z-10 w-full h-full flex flex-col">
+          <button
+            onClick={onClose}
+            aria-label="Cerrar galería"
+            className="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/90 hover:bg-white transition"
+          >
+            <FiX size={20} />
+          </button>
+
+          <div className="flex-1 flex items-center justify-center">
+            {hasVideo ? (
+              <video
+                src={item.videoSrc}
+                poster={item.videoPoster}
+                controls
+                playsInline
+                className="w-full h-full object-contain max-h-screen"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="embla w-full h-full">
+                  <div
+                    className="embla__viewport h-full"
+                    ref={emblaRef}
+                    style={{ touchAction: "pan-y" }}
+                  >
+                    <div className="embla__container flex h-full">
+                      {item.images?.map((src, idx) => (
+                        <div
+                          className="embla__slide flex-[0_0_100%] shrink-0 flex items-center justify-center h-full"
+                          key={String(src) + idx}
+                        >
+                          <img
+                            src={src}
+                            alt={`${item.title} - ${idx + 1}`}
+                            className="max-h-[100vh] max-w-full object-contain"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-white/95 border-t p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 pr-3">
+                <h3 className="text-sm font-semibold truncate">{item.title}</h3>
+                <p className="text-xs text-gray-600 truncate">
+                  {item.client ? `${item.client} • ` : ""}
+                  {item.year} • {item.category}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowInfo((s) => !s)}
+                className="text-sm text-[var(--accent-1)] px-3 py-2 rounded-md"
+              >
+                {showInfo ? "Ocultar" : "Detalles"}
+              </button>
+            </div>
+
+            {showInfo && (
+              <div className="mt-3 text-sm text-gray-700">
+                <p className="mb-2">{item.desc}</p>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {item.tech?.map((t) => (
+                    <TechPill key={t} tech={t} />
+                  ))}
+                </div>
+                <div className="flex gap-2 mb-3">
+                  {item.features?.map((f) => (
+                    <FeaturePill key={f.key} feature={f} />
+                  ))}
+                </div>
+
+                {/* ACTIONS (mobile) */}
+                {item.link && (
+                  <a
+                    href={item.link}
+                    target={item.link?.startsWith("/") ? "_self" : "_blank"}
+                    rel={
+                      item.link?.startsWith("/")
+                        ? undefined
+                        : "noopener noreferrer"
+                    }
+                    className="block w-full mb-2 px-4 py-2 rounded-full bg-[var(--accent-1)] text-white text-center"
+                  >
+                    Ver app / sitio
+                  </a>
+                )}
+
+                <a
+                  href="#contact"
+                  onClick={() => {
+                    onClose();
+                  }}
+                  className="block w-full px-4 py-2 rounded-full border border-gray-200 text-center"
+                >
+                  Solicitar proyecto similar
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop / tablet modal (original layout) with action buttons in aside
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-6"
-      role="dialog"
-      aria-modal="true"
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
 
       <div className="relative z-10 max-w-6xl w-full bg-white rounded-lg shadow-2xl overflow-hidden">
         <div className="md:flex">
-          {/* LEFT: CAROUSEL */}
+          {/* LEFT: carousel / video */}
           <div className="md:w-2/3 w-full overflow-hidden relative">
             <div className="flex items-center justify-between p-4 border-b md:border-b-0 md:border-r">
               <div>
@@ -407,62 +613,86 @@ function LightboxModal({ active, onClose }) {
                   {item.year} • {item.category} • {item.type}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={onClose}
-                  aria-label="Cerrar galería"
-                  className="p-2"
-                >
-                  <FiX size={18} />
-                </button>
-              </div>
             </div>
 
-            <div className="embla w-full">
-              <div className="embla__viewport overflow-hidden" ref={emblaRef}>
-                <div className="embla__container flex will-change-transform">
-                  {item.images?.map((src, idx) => (
-                    <div
-                      className="embla__slide flex-[0_0_100%] shrink-0"
-                      key={String(src) + idx}
-                    >
-                      <div className="h-72 md:h-[520px] w-full">
-                        <img
-                          src={src}
-                          alt={`${item.title} - ${idx + 1}`}
-                          className="w-full h-full object-cover object-center"
-                        />
-                      </div>
-                    </div>
-                  ))}
+            {hasVideo ? (
+              <div className="w-full p-4 sm:p-6 flex flex-col items-center">
+                <div className="w-full mb-2 rounded overflow-hidden bg-gray-50 flex items-center justify-center">
+                  <img
+                    src={item.videoPoster}
+                    alt={`${item.title} cover`}
+                    className="w-full h-auto object-contain"
+                  />
+                </div>
+
+                <div className="flex justify-center w-full">
+                  <video
+                    src={item.videoSrc}
+                    poster={item.videoPoster}
+                    controls
+                    playsInline
+                    className="w-full max-h-[520px]"
+                  />
                 </div>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="embla w-full">
+                  <div
+                    className="embla__viewport overflow-hidden"
+                    ref={emblaRef}
+                    style={{ touchAction: "pan-y" }}
+                  >
+                    <div className="embla__container flex will-change-transform">
+                      {item.images?.map((src, idx) => (
+                        <div
+                          className="embla__slide flex-[0_0_100%] shrink-0 flex items-center justify-center"
+                          key={String(src) + idx}
+                        >
+                          <div className="h-72 sm:h-80 md:h-[520px] w-full flex items-center justify-center bg-gray-50">
+                            <img
+                              src={src}
+                              alt={`${item.title} - ${idx + 1}`}
+                              className="max-w-full max-h-full object-contain object-center"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
 
-            <div className="p-4 border-t md:border-t-0 md:border-r flex items-center justify-center gap-3">
-              <div className="flex gap-2 items-center">
-                {item.images?.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => emblaApi && emblaApi.scrollTo(i)}
-                    className={`w-3 h-3 rounded-full ${
-                      current === i ? "bg-[var(--accent-1)]" : "bg-gray-300"
-                    }`}
-                    aria-label={`Ir a la imagen ${i + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
+                <div className="p-4 border-t md:border-t-0 md:border-r flex items-center justify-center gap-3">
+                  <div className="flex gap-2 items-center">
+                    {item.images?.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => emblaApi && emblaApi.scrollTo(i)}
+                        className={`w-3 h-3 rounded-full ${
+                          current === i ? "bg-[var(--accent-1)]" : "bg-gray-300"
+                        }`}
+                        aria-label={`Ir a la imagen ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* RIGHT: DETAILS */}
-          <aside className="md:w-1/3 w-full p-6">
+          <aside className="md:w-1/3 w-full p-4 sm:p-6 relative">
+            <button
+              onClick={onClose}
+              aria-label="Cerrar galería"
+              className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100 transition"
+            >
+              <FiX size={18} />
+            </button>
+
             <p className="text-sm text-gray-600 mb-4">{item.desc}</p>
 
             <div className="mb-4">
-              {/* <h4 className="text-sm font-semibold mb-2">
-                Rol • Cliente • Año
-              </h4> */}
               <div className="text-sm text-gray-700">
                 <div className="flex items-center gap-2 mb-1">
                   <FiUsers /> <span>{item.role}</span>
@@ -505,9 +735,7 @@ function LightboxModal({ active, onClose }) {
               <h4 className="text-sm font-semibold mb-2">Características</h4>
               <div className="flex flex-col gap-2">
                 {item.features?.map((f) => (
-                  <div key={f.key} className="flex items-center gap-3">
-                    <FeaturePill feature={f} />
-                  </div>
+                  <FeaturePill key={f.key} feature={f} />
                 ))}
               </div>
             </div>
@@ -522,17 +750,16 @@ function LightboxModal({ active, onClose }) {
                       ? undefined
                       : "noopener noreferrer"
                   }
-                  className="inline-flex items-center justify-center w-full px-4 py-2 rounded-full bg-[var(--accent-1)] text-white"
+                  className="inline-flex items-center justify-center w-full px-4 py-2 rounded-full bg-[var(--accent-1)] text-white hover:opacity-95 transition"
                 >
-                  Ver app / sitio
-                  <FiExternalLink className="ml-2" />
+                  Ver app / sitio <FiExternalLink className="ml-2" />
                 </a>
               )}
 
               <a
                 href="#contact"
                 onClick={onClose}
-                className="inline-flex items-center justify-center w-full mt-3 px-4 py-2 rounded-full border border-gray-200"
+                className="inline-flex items-center justify-center w-full mt-3 px-4 py-2 rounded-full border border-gray-200 hover:bg-gray-50 transition"
               >
                 Solicitar proyecto similar
               </a>

@@ -1,3 +1,4 @@
+// src/App.jsx
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -10,8 +11,10 @@ import Footer from "./components/Footer";
 
 export default function App() {
   return (
-    <>
+    // Wrapper principal: previene scroll horizontal inesperado
+    <div className="min-h-screen overflow-x-hidden">
       <Navbar />
+
       <Routes>
         <Route
           path="/"
@@ -26,16 +29,17 @@ export default function App() {
             </>
           }
         />
+
+        {/* <- Ojo: quité el Navbar duplicado que tenías aquí */}
         <Route
           path="/portfolio"
           element={
             <>
-              <Navbar />
               <Portfolio />
             </>
           }
         />
       </Routes>
-    </>
+    </div>
   );
 }
