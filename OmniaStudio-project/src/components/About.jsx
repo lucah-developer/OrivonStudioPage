@@ -6,7 +6,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="py-28 bg-gradient-to-b from-[var(--bg)] to-white"
+      className="py-20 md:py-28 bg-gradient-to-b from-[var(--bg)] to-white"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div
@@ -16,14 +16,14 @@ export default function About() {
           {/* subtle border glow */}
           <div className="absolute -inset-0.5 bg-gradient-to-r from-[var(--accent-1)]/10 via-transparent to-[var(--accent-2)]/10 blur-lg opacity-40 rounded-3xl"></div>
           <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center p-10 lg:p-14">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-center p-6 md:p-10 lg:p-14">
               {/* Texto principal */}
-              <div data-aos="fade-right">
-                <h2 className="text-3xl md:text-4xl font-heading font-bold text-[var(--text-primary)] mb-4">
+              <div data-aos="fade-right" className="text-center lg:text-left">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold text-[var(--text-primary)] mb-4">
                   Sobre Nosotros
                 </h2>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className="text-gray-700 leading-relaxed mb-4 text-sm md:text-base">
                   Somos un equipo en crecimiento con más de{" "}
                   <strong>3 años</strong> construyendo experiencias digitales a
                   medida. Diseñamos y desarrollamos soluciones que van desde
@@ -32,19 +32,19 @@ export default function About() {
                   necesidades reales de negocio.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className="text-gray-700 leading-relaxed mb-4 text-sm md:text-base">
                   Trabajamos de forma cercana con cada cliente: comenzamos por
-                  un meeting donde recopilamos objetivos, público y requisitos
-                  clave; luego proponemos una solución a medida y un presupuesto
-                  acorde a la complejidad del proyecto. Para garantizar la mejor
-                  entrega, sumamos especialistas (desarrolladores, diseñadores,
-                  QA) por tiempo determinado según la escala del trabajo.
+                  un meeting donde recopilamos objetivos, público y requisitos;
+                  luego proponemos una solución a medida y un presupuesto acorde
+                  a la complejidad. Sumamos especialistas (dev, diseño, QA)
+                  según escala del proyecto.
                 </p>
 
-                <div className="mt-6 grid grid-cols-2 gap-4">
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Card 1 */}
                   <div className="flex items-start gap-3">
                     <div
-                      className="w-auto h-9 rounded-full px-2 flex items-center justify-center text-white text-lg"
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg flex-shrink-0"
                       style={{ background: "var(--accent-1)" }}
                     >
                       <FaClock />
@@ -60,9 +60,10 @@ export default function About() {
                     </div>
                   </div>
 
+                  {/* Card 2 */}
                   <div className="flex items-start gap-3">
                     <div
-                      className="w-auto h-9 rounded-full px-2 flex items-center justify-center text-white text-lg"
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg flex-shrink-0"
                       style={{ background: "var(--accent-2)" }}
                     >
                       <FaUsers />
@@ -78,9 +79,10 @@ export default function About() {
                     </div>
                   </div>
 
+                  {/* Card 3 */}
                   <div className="flex items-start gap-3">
                     <div
-                      className="w-auto h-9 rounded-full px-2 flex items-center justify-center text-white text-lg"
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg flex-shrink-0"
                       style={{ background: "var(--accent-3)" }}
                     >
                       <FaGlobe />
@@ -96,9 +98,10 @@ export default function About() {
                     </div>
                   </div>
 
+                  {/* Card 4 */}
                   <div className="flex items-start gap-3">
                     <div
-                      className="w-auto h-9 rounded-full px-2 flex items-center justify-center text-white text-lg"
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg flex-shrink-0"
                       style={{ background: "var(--accent-1)" }}
                     >
                       <FaTools />
@@ -115,10 +118,10 @@ export default function About() {
                   </div>
                 </div>
 
-                <div className="mt-8 flex items-center gap-4">
+                <div className="mt-8 flex flex-col sm:flex-row items-center sm:items-start gap-3">
                   <a
                     href="#contact"
-                    className="inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold shadow-sm transform transition hover:scale-105"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold shadow-sm transform transition hover:scale-105"
                     style={{ background: "var(--accent-1)" }}
                     data-aos="zoom-in"
                   >
@@ -127,7 +130,7 @@ export default function About() {
 
                   <a
                     href="#process"
-                    className="text-sm font-medium text-[var(--text-primary)] underline-offset-4 hover:underline"
+                    className="w-full sm:w-auto text-center sm:text-left text-sm font-medium text-[var(--text-primary)] underline-offset-4 hover:underline"
                     data-aos="zoom-in"
                     data-aos-delay="120"
                   >
@@ -141,13 +144,9 @@ export default function About() {
                 data-aos="fade-left"
                 className="flex justify-center lg:justify-end"
               >
-                <div
-                  data-aos="fade-left"
-                  className="flex justify-center lg:justify-end"
-                >
-                  <div className="w-full max-w-md">
-                    <TestimonialsCarousel />
-                  </div>
+                <div className="w-full max-w-md">
+                  {/* Asegurá que TestimonialsCarousel sea responsive */}
+                  <TestimonialsCarousel />
                 </div>
               </div>
             </div>{" "}

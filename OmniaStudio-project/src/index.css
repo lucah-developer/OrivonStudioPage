@@ -26,3 +26,15 @@ body {
   @apply inline-flex items-center justify-center px-5 py-2 rounded-lg text-white font-medium;
   background: var(--accent-1);
 }
+
+.embla__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  position: relative;
+  min-width: 100%;
+}
