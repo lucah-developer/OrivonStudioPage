@@ -118,10 +118,10 @@ export default function About() {
                   </div>
                 </div>
 
-                <div className="mt-8 flex flex-col sm:flex-row items-center sm:items-start gap-3">
+                <div className="mt-8 flex flex-col sm:flex-row items-center  gap-4">
                   <a
                     href="#contact"
-                    className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold shadow-sm transform transition hover:scale-105"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold shadow-sm transform transition duration-300 hover:scale-105 hover:brightness-110"
                     style={{ background: "var(--accent-1)" }}
                     data-aos="zoom-in"
                   >

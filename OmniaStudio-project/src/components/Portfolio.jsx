@@ -617,13 +617,13 @@ function LightboxModal({ active, onClose, isMobile }) {
 
             {hasVideo ? (
               <div className="w-full p-4 sm:p-6 flex flex-col items-center">
-                <div className="w-full mb-2 rounded overflow-hidden bg-gray-50 flex items-center justify-center">
+                {/* <div className="w-full mb-2 rounded overflow-hidden bg-gray-50 flex items-center justify-center">
                   <img
                     src={item.videoPoster}
                     alt={`${item.title} cover`}
                     className="w-full h-auto object-contain"
                   />
-                </div>
+                </div> */}
 
                 <div className="flex justify-center w-full">
                   <video

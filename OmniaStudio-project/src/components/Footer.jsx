@@ -33,12 +33,12 @@ export default function Footer() {
           >
             Servicios
           </a>
-          <a
+          {/* <a
             href="/portfolio"
             className="hover:text-[var(--accent-1)] transition"
           >
             Portfolio
-          </a>
+          </a> */}
           <a href="#about" className="hover:text-[var(--accent-1)] transition">
             Nosotros
           </a>

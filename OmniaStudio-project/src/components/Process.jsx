@@ -105,11 +105,14 @@ export default function Process() {
                   <span className="text-xs text-gray-400">Detalle</span>
                   <a
                     href="#contact"
-                    className="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full"
+                    className="group inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full transition-all duration-300 hover:text-[var(--accent-2)]"
                     style={{ color: "var(--accent-1)" }}
                     aria-label={`Solicitar presupuesto después de ${title}`}
                   >
-                    Solicitar presupuesto →
+                    Solicitar presupuesto
+                    <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
+                      →
+                    </span>
                   </a>
                 </div>
               </div>

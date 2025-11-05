@@ -2,12 +2,117 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="src/assets/logo-icono.svg" />
+    <!-- Primary meta tags -->
+    <title>Orivon Studio — Diseño y desarrollo web moderno</title>
+    <meta
+      name="description"
+      content="Orivon Studio: diseño y desarrollo web profesional. Creamos landings, e-commerce y apps con React, TailwindCSS y soluciones a medida. Contactanos para tu próximo proyecto."
+    />
+    <meta
+      name="keywords"
+      content="desarrollo web, landing page, e-commerce, React, TailwindCSS, orivon studio, diseño web, freelance"
+    />
+    <meta name="author" content="Orivon Studio" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Orivon Studio</title>
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#7c3aed" />
+
+    <!-- Social / Open Graph -->
+    <!-- Replace the og:url and og:image with your production absolute URLs -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Orivon Studio — Diseño y desarrollo web moderno"
+    />
+    <meta
+      property="og:description"
+      content="Creamos landings, e-commerce y apps con React y TailwindCSS. Soluciones modernas y responsive para tu negocio."
+    />
+    <meta property="og:url" content="https://your-domain.com/" />
+    <meta property="og:site_name" content="Orivon Studio" />
+    <meta
+      property="og:image"
+      content="https://your-domain.com/assets/social-preview-1200x630.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@your_twitter" />
+    <meta
+      name="twitter:title"
+      content="Orivon Studio — Diseño y desarrollo web moderno"
+    />
+    <meta
+      name="twitter:description"
+      content="Creamos landings, e-commerce y apps con React y TailwindCSS. Soluciones modernas y responsive para tu negocio."
+    />
+    <meta
+      name="twitter:image"
+      content="https://your-domain.com/assets/social-preview-1200x630.png"
+    />
+
+    <!-- Canonical (update to your real homepage URL) -->
+    <link rel="canonical" href="https://your-domain.com/" />
+
+    <!-- Favicon & apple-touch -->
+    <link rel="icon" type="image/svg+xml" href="src/assets/logo-icono.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Performance hints: preconnect fonts (if used) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Optional: preload main critical font / css -->
+    <!-- <link rel="preload" href="/fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossorigin> -->
+
+    <!-- Structured data (JSON-LD) - Organization + WebSite -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://omnia-studio-page.vercel.app/#organization",
+            "name": "Orivon Studio",
+            "url": "https://omnia-studio-page.vercel.app/",
+            "logo": "https://omnia-studio-page.vercel.app/assets/logo-icono.png",
+            "sameAs": ["https://www.instagram.com/orivonstudio/"],
+            "contactPoint": [
+              {
+                "@type": "ContactPoint",
+                "contactType": "sales",
+                "email": "info@orivonstudio.com",
+                "url": "https://omnia-studio-page.vercel.app/#contact"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://omnia-studio-page.vercel.app/#website",
+            "url": "https://omnia-studio-page.vercel.app/",
+            "name": "Orivon Studio",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://omnia-studio-page.vercel.app/?s={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
+
+    <!-- Styles / entry -->
+    <script type="module" src="/src/main.jsx" defer></script>
+
+    <!-- Small accessibility / SEO improvements -->
+    <!-- Prefer adding critical CSS inline if tiny, otherwise keep in build CSS -->
   </head>
+
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

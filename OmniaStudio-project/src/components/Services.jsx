@@ -141,14 +141,13 @@ export default function Services() {
                 <div className="mt-4 flex items-center justify-between gap-3">
                   <a
                     href="#contact"
-                    className="inline-flex items-center justify-center px-4 py-2 rounded-full text-white font-medium shadow-sm"
-                    style={{ background: "var(--accent-1)" }}
+                    className="inline-flex w-full items-center justify-center px-4 py-2 rounded-full text-white font-medium shadow-sm bg-[var(--accent-1)] hover:bg-gradient-to-r hover:from-[var(--accent-1)] hover:to-[var(--accent-2)] hover:brightness-110 hover:scale-105 transition-all duration-300"
                     aria-label={`Solicitar presupuesto para ${svc.title}`}
                   >
                     Solicitar presupuesto
                   </a>
 
-                  <button
+                  {/* <button
                     type="button"
                     className="text-sm text-gray-500 hover:text-[var(--text-primary)] transition"
                     onClick={() => {
@@ -158,7 +157,7 @@ export default function Services() {
                     aria-label={`Más info sobre ${svc.title}`}
                   >
                     Más info →
-                  </button>
+                  </button> */}
                 </div>
               </article>
             );
@@ -177,8 +176,7 @@ export default function Services() {
 
           <a
             href="#contact"
-            className="inline-block mt-2 px-6 py-3 rounded-full text-white font-semibold shadow-sm transform transition hover:scale-105"
-            style={{ background: "var(--accent-1)" }}
+            className="inline-flex  items-center justify-center px-6 py-3 rounded-full text-white font-medium shadow-sm bg-[var(--accent-1)] hover:bg-gradient-to-r hover:from-[var(--accent-1)] hover:to-[var(--accent-2)] hover:brightness-110 hover:scale-105 transition-all duration-300"
             data-aos="zoom-in"
           >
             Contactanos para un paquete a medida
