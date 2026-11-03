@@ -19,11 +19,13 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const panelRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const isHome = location.pathname === "/";
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [showSiteNav, setShowSiteNav] = useState(() => location.pathname !== "/");
 
   // Función para manejar navegación con anclas
   const handleAnchorClick = (e, href) => {
@@ -59,6 +61,24 @@ export default function Navbar() {
       document.head.appendChild(style);
     }
   }, []);
+
+  // En el inicio el hero cinematográfico ocupa la barra superior.
+  // El navbar fijo entra cuando el usuario empieza a bajar.
+  useEffect(() => {
+    if (!isHome) {
+      setShowSiteNav(true);
+      return undefined;
+    }
+
+    const onScroll = () => {
+      const hero = document.getElementById("hero");
+      const limit = hero ? hero.offsetHeight * 0.72 : window.innerHeight * 0.72;
+      setShowSiteNav(window.scrollY > limit);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
 
   // Detectar scroll: uso IntersectionObserver con #hero si existe
   useEffect(() => {
@@ -106,70 +126,101 @@ export default function Navbar() {
     };
   }, [open]);
 
+  const cinematic = isHome && !showSiteNav;
+
   return (
     <>
       <header
+        data-site-nav
         className={`fixed w-full z-50 transition-all duration-300 ${
-          scrolled ? "backdrop-blur-sm bg-white/95 shadow-md" : "bg-transparent"
+          cinematic
+            ? "is-cinematic bg-transparent"
+            : scrolled || isHome
+              ? "backdrop-blur-sm bg-white/95 shadow-md"
+              : "bg-transparent"
         }`}
         aria-expanded={open}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <a href="/" className="flex items-center gap-3">
-              <img
-                src={icono}
-                alt="Orivon Studio"
-                className="h-full w-auto object-contain"
-              />
+        <div className={`mx-auto px-6 md:px-10 ${cinematic ? "max-w-[1440px]" : "max-w-7xl md:px-8"}`}>
+          <div className={`flex items-center h-16 md:h-20 ${cinematic ? "md:grid md:grid-cols-[1fr_auto_1fr]" : "justify-between"}`}>
+            <a href="/" className={`flex items-center gap-3 ${cinematic ? "justify-self-start" : ""}`}>
+              {cinematic ? (
+                <span className="font-heading text-[0.82rem] md:text-sm font-medium tracking-[0.22em] text-[#FAF2E8]">
+                  ORIVON STUDIO
+                </span>
+              ) : (
+                <img
+                  src={icono}
+                  alt="Orivon Studio"
+                  className="h-full w-auto object-contain"
+                />
+              )}
             </a>
 
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+            <nav className={`hidden md:flex items-center gap-8 text-sm font-medium ${cinematic ? "justify-self-center" : ""}`}>
               {NAV_LINKS.map(({ href, label }) => (
                 <a
                   key={href}
                   href={href}
                   onClick={(e) => handleAnchorClick(e, href)}
-                  className="relative group px-1 py-2 transition-colors duration-300 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-1)]/20 rounded"
+                  className={`relative group px-1 py-2 transition-colors duration-300 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-1)]/30 ${
+                    cinematic ? "text-[#FAF2E8]/80 hover:text-[#FAF2E8]" : "text-[var(--text-primary)]"
+                  }`}
                 >
-                  <span className="inline-block transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-[var(--accent-1)] group-hover:to-[var(--accent-2)] group-hover:bg-clip-text group-hover:text-transparent">
+                  <span
+                    className={`inline-block transition-all duration-300 ${
+                      cinematic
+                        ? ""
+                        : "group-hover:bg-gradient-to-r group-hover:from-[var(--accent-1)] group-hover:to-[var(--accent-2)] group-hover:bg-clip-text group-hover:text-transparent"
+                    }`}
+                  >
                     {label}
                   </span>
                   <span
-                    className="absolute left-0 -bottom-0.5 h-0.5 w-0 bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] rounded-full transition-all duration-300 ease-out group-hover:w-full"
+                    className={`absolute left-0 -bottom-0.5 h-px w-0 rounded-full transition-all duration-300 ease-out group-hover:w-full ${
+                      cinematic ? "bg-[#00A78E]" : "h-0.5 bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)]"
+                    }`}
                     aria-hidden="true"
                   />
                 </a>
               ))}
 
-              {/* CTA */}
+              {!cinematic && (
+                <a
+                  href="/#contact"
+                  onClick={(e) => handleAnchorClick(e, "/#contact")}
+                  className="ml-4 relative inline-flex items-center justify-center px-4 py-2 rounded-full text-white font-medium shadow-sm overflow-hidden transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[var(--accent-1)]/25"
+                  style={{ background: "var(--accent-1)" }}
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                  <span className="relative z-10">Solicitar presupuesto</span>
+                </a>
+              )}
+            </nav>
+
+            {cinematic && (
               <a
                 href="/#contact"
                 onClick={(e) => handleAnchorClick(e, "/#contact")}
-                className="ml-4 relative inline-flex items-center justify-center px-4 py-2 rounded-full text-white font-medium shadow-sm overflow-hidden transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[var(--accent-1)]/25"
-                style={{ background: "var(--accent-1)" }}
+                className="hidden md:inline-flex justify-self-end items-center px-4 py-2 rounded-full bg-[#FAF2E8] text-[#071525] text-sm font-medium tracking-wide transition duration-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FAF2E8]/70"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10">Solicitar presupuesto</span>
+                Hablemos ↗
               </a>
-            </nav>
+            )}
 
-            {/* Mobile toggle */}
-            <div className="md:hidden flex items-center gap-3">
+            <div className={`md:hidden flex items-center gap-3 ${cinematic ? "ml-auto" : ""}`}>
               <a
                 href="#contact"
                 onClick={(e) => handleAnchorClick(e, "/#contact")}
-                className="inline-block p-2 rounded-md"
-                aria-label="Contacto"
+                className="inline-block rounded-full"
+                aria-label={cinematic ? "Hablemos" : "Contacto"}
               >
                 <div
-                  className="w-full h-9 rounded-md px-2 flex items-center justify-center"
-                  style={{ background: "var(--accent-1)" }}
+                  className={`h-9 px-3 flex items-center justify-center ${cinematic ? "rounded-full bg-[#FAF2E8]" : "rounded-md"}`}
+                  style={cinematic ? undefined : { background: "var(--accent-1)" }}
                 >
-                  <span className="text-white text-sm font-medium">
-                    Presupuesto
+                  <span className={`text-sm font-medium ${cinematic ? "text-[#071525]" : "text-white"}`}>
+                    {cinematic ? "Hablemos" : "Presupuesto"}
                   </span>
                 </div>
               </a>
@@ -178,7 +229,7 @@ export default function Navbar() {
                 onClick={() => setOpen((v) => !v)}
                 aria-label="Abrir menú"
                 aria-expanded={open}
-                className="p-2 rounded-md text-[var(--text-primary)]"
+                className={`p-2 rounded-md ${cinematic ? "text-[#FAF2E8]" : "text-[var(--text-primary)]"}`}
               >
                 {open ? <FiX size={22} /> : <FiMenu size={22} />}
               </button>

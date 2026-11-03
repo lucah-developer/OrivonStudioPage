@@ -12,8 +12,8 @@ export default {
         "accent-3": "#00A78E",
       },
       fontFamily: {
-        heading: ["Poppins", "sans-serif"],
-        body: ["Inter", "sans-serif"],
+        heading: ["Space Grotesk", "sans-serif"],
+        body: ["Space Grotesk", "sans-serif"],
       },
     },
   },

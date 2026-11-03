@@ -1,83 +1,155 @@
-import React from "react";
-import { FaTools, FaLaptopCode } from "react-icons/fa"; // íconos modernos
-import icono from "../assets/Icono.png";
+import { lazy, Suspense, useLayoutEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import gsap from "gsap";
+import HeroParticles from "./HeroParticles";
+import "./hero.css";
+
+const OrivonLogo = lazy(() => import("./OrivonLogo"));
+
+let heroIntroDone = false;
+
+function scrollToId(event, id) {
+  event.preventDefault();
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+}
 
 export default function Hero() {
-  return (
-    <section
-      id="hero"
-      className="pt-24 pb-20 bg-[var(--bg)] overflow-hidden min-h-[calc(100vh-6rem)]"
-      style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1.25rem)" }}
-    >
-      <div className="max-w-7xl mx-auto px-6 md:px-10 flex flex-col-reverse md:flex-row items-center gap-10 md:gap-16">
-        {/* Texto */}
-        <div className="flex-1 text-center md:text-left" data-aos="fade-right">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[var(--text-primary)] leading-tight tracking-tight">
-            Construimos tu{" "}
-            <span className="text-[var(--accent-2)]">presencia digital</span> —
-            completa
-          </h1>
+  const rootRef = useRef(null);
+  const loaderRef = useRef(null);
+  const halfTopRef = useRef(null);
+  const halfBotRef = useRef(null);
+  const markRef = useRef(null);
+  const kickerRef = useRef(null);
+  const leadRef = useRef(null);
+  const actionsRef = useRef(null);
+  const stageRef = useRef(null);
 
-          <p className="mt-4 sm:mt-5 text-base sm:text-lg md:text-xl text-gray-600 max-w-xl mx-auto md:mx-0">
-            Branding, diseño UX/UI, desarrollo y hosting. Todo entregado listo
-            para convertir visitantes en clientes fieles.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const html = document.documentElement;
+    const nav = document.querySelector("[data-site-nav]");
+    const lines = root.querySelectorAll(".hero3d__line-inner");
+
+    const showResting = () => {
+      gsap.set(loaderRef.current, { autoAlpha: 0 });
+      gsap.set(lines, { yPercent: 0 });
+      gsap.set([kickerRef.current, leadRef.current, actionsRef.current, stageRef.current], {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+      });
+      if (nav) gsap.set(nav, { clearProps: "opacity,visibility,transform" });
+    };
+
+    if (reduce || heroIntroDone) {
+      showResting();
+      return undefined;
+    }
+
+    const ctx = gsap.context(() => {
+      html.classList.add("orivon-intro");
+      gsap.set(markRef.current, { opacity: 0, letterSpacing: "0.3em" });
+      gsap.set(lines, { yPercent: 110 });
+      gsap.set(kickerRef.current, { autoAlpha: 0, y: 16 });
+      gsap.set(leadRef.current, { autoAlpha: 0, y: 18 });
+      gsap.set(actionsRef.current, { autoAlpha: 0, y: 16 });
+      gsap.set(stageRef.current, { autoAlpha: 0, y: 28, scale: 0.96 });
+      if (nav) gsap.set(nav, { autoAlpha: 0, y: -16 });
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+        onComplete: () => {
+          heroIntroDone = true;
+          html.classList.remove("orivon-intro");
+        },
+      });
+
+      tl.to(markRef.current, { opacity: 1, duration: 0.55, delay: 0.25 })
+        .to(markRef.current, { letterSpacing: "0.08em", duration: 0.65, ease: "power3.inOut" }, "+=0.22")
+        .to(halfTopRef.current, { yPercent: -100, duration: 1.15, ease: "power3.inOut" }, "+=0.16")
+        .to(halfBotRef.current, { yPercent: 100, duration: 1.15, ease: "power3.inOut" }, "<")
+        .to(markRef.current, { opacity: 0, scale: 0.96, duration: 0.4, ease: "power2.in" }, "<0.12")
+        .set(loaderRef.current, { autoAlpha: 0 })
+        .call(() => html.classList.remove("orivon-intro"));
+
+      if (nav) {
+        tl.to(nav, { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.15");
+      }
+
+      tl.to(kickerRef.current, { autoAlpha: 1, y: 0, duration: 0.55 }, "-=0.45")
+        .to(lines, { yPercent: 0, duration: 0.8, stagger: 0.12, ease: "power3.out" }, "-=0.35")
+        .to(leadRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, "-=0.42")
+        .to(actionsRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, "-=0.36")
+        .to(stageRef.current, { autoAlpha: 1, y: 0, scale: 1, duration: 1.05, ease: "power3.out" }, "-=0.72");
+    }, root);
+
+    return () => {
+      html.classList.remove("orivon-intro");
+      ctx.revert();
+      if (nav) gsap.set(nav, { clearProps: "opacity,visibility,transform" });
+    };
+  }, []);
+
+  return (
+    <section id="hero" ref={rootRef} className="hero3d" aria-label="Inicio">
+      <div className="orivon-loader" ref={loaderRef} aria-hidden="true">
+        <span className="orivon-half orivon-half--top" ref={halfTopRef} />
+        <span className="orivon-half orivon-half--bottom" ref={halfBotRef} />
+        <div className="orivon-loader__title" ref={markRef}>
+          <span className="orivon-loader__word">ORI</span>
+          <span className="orivon-loader__dot" />
+          <span className="orivon-loader__word">VON</span>
+        </div>
+      </div>
+
+      <div className="hero3d__bg" aria-hidden="true">
+        <HeroParticles />
+        <span className="hero3d__glow hero3d__glow--violet" />
+        <span className="hero3d__glow hero3d__glow--teal" />
+        <span className="hero3d__glow hero3d__glow--navy" />
+        <span className="hero3d__spark hero3d__spark--a" />
+        <span className="hero3d__spark hero3d__spark--b" />
+        <span className="hero3d__spark hero3d__spark--c" />
+      </div>
+
+      <div className="hero3d__layout">
+        <div className="hero3d__copy">
+          <p className="hero3d__kicker" ref={kickerRef}>
+            <span className="hero3d__kicker-mark" aria-hidden="true" />
+            ESTUDIO DIGITAL INDEPENDIENTE
           </p>
 
-          {/* Botones */}
-          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 w-full">
-            <a
-              href="#contact"
-              aria-label="Solicitar presupuesto"
-              className="group relative inline-flex items-center justify-center w-full sm:w-auto px-6 py-3.5 text-white font-semibold rounded-full overflow-hidden transition-all duration-300"
-              style={{ background: "var(--accent-1)" }}
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-[var(--accent-1)] to-[var(--accent-2)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <span className="relative z-10">Solicitar presupuesto</span>
+          <h1 className="hero3d__title">
+            <span className="hero3d__line">
+              <span className="hero3d__line-inner">Diseñamos experiencias</span>
+            </span>
+            <span className="hero3d__line">
+              <span className="hero3d__line-inner">
+                digitales que <em>impactan.</em>
+              </span>
+            </span>
+          </h1>
+
+          <p className="hero3d__lead" ref={leadRef}>
+            Diseño web, desarrollo y experiencias 3D para marcas que buscan ir más allá.
+          </p>
+
+          <div className="hero3d__actions" ref={actionsRef}>
+            <Link className="hero3d__btn hero3d__btn--primary" to="/portfolio">
+              Explorar proyectos <span aria-hidden="true">↗</span>
+            </Link>
+            <a className="hero3d__btn hero3d__btn--ghost" href="#contact" onClick={(event) => scrollToId(event, "contact")}>
+              Hablemos
             </a>
-
-            <a
-              href="#portfolio"
-              aria-label="Ver trabajos"
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-full px-6 py-3.5 font-medium border border-gray-300 text-[var(--text-primary)] hover:bg-gray-50 hover:border-gray-400 transition-all duration-300"
-            >
-              Ver trabajos
-            </a>
-          </div>
-
-          {/* Etiquetas pequeñas con íconos */}
-          <div className="mt-8 md:mt-10 flex flex-wrap justify-center md:justify-start gap-4 text-sm text-gray-500">
-            <div className="flex items-center gap-3">
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center shadow-sm text-white"
-                style={{ background: "var(--accent-3)" }}
-              >
-                <FaTools className="text-base" />
-              </div>
-              <span className="text-sm">Mantenimiento & Hosting</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center shadow-sm text-white"
-                style={{ background: "var(--accent-2)" }}
-              >
-                <FaLaptopCode className="text-base" />
-              </div>
-              <span className="text-sm">Diseño & Desarrollo</span>
-            </div>
           </div>
         </div>
 
-        {/* Imagen grande */}
-        <div
-          className="w-full md:w-[48%] flex justify-center items-center"
-          data-aos="fade-left"
-        >
-          <img
-            src={icono}
-            alt="Orivon icon"
-            className="w-3/4 sm:w-2/3 md:w-[90%] lg:w-full max-w-[520px] drop-shadow-xl object-contain"
-          />
+        <div className="hero3d__stage" ref={stageRef}>
+          <Suspense fallback={<p className="hero3d__loading">Preparando el logotipo</p>}>
+            <OrivonLogo />
+          </Suspense>
+          <p className="hero3d__caption">Orivon — Digital experiences</p>
         </div>
       </div>
     </section>
