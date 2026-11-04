@@ -71,6 +71,12 @@ export default function Navbar() {
     }
 
     const onScroll = () => {
+      const stage = document.getElementById("orivon-logo-stage");
+      const journey = Number(stage?.dataset.journey || 0);
+      if (journey > 0.04) {
+        setShowSiteNav(journey > 0.6);
+        return;
+      }
       const hero = document.getElementById("hero");
       const limit = hero ? hero.offsetHeight * 0.72 : window.innerHeight * 0.72;
       setShowSiteNav(window.scrollY > limit);

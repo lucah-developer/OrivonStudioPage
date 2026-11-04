@@ -8,6 +8,16 @@ const OrivonLogo = lazy(() => import("./OrivonLogo"));
 
 let heroIntroDone = false;
 
+export function whenHeroReady(callback) {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (heroIntroDone || reduce) {
+    callback();
+    return () => {};
+  }
+  window.addEventListener("orivon-hero-ready", callback);
+  return () => window.removeEventListener("orivon-hero-ready", callback);
+}
+
 function scrollToId(event, id) {
   event.preventDefault();
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -44,6 +54,7 @@ export default function Hero() {
 
     if (reduce || heroIntroDone) {
       showResting();
+      window.dispatchEvent(new Event("orivon-hero-ready"));
       return undefined;
     }
 
@@ -62,6 +73,7 @@ export default function Hero() {
         onComplete: () => {
           heroIntroDone = true;
           html.classList.remove("orivon-intro");
+          window.dispatchEvent(new Event("orivon-hero-ready"));
         },
       });
 

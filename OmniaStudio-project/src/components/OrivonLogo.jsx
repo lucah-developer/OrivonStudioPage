@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { createSequence } from "./CosmicSequence";
 
 const MODEL_URL = "/models/orivon-logo.glb";
 
@@ -79,8 +80,19 @@ export default function OrivonLogo() {
     scene.add(spin);
 
     let radius = 1;
+    let sequenceActive = false;
+    const sequence = createSequence({
+      scene,
+      camera,
+      renderer,
+      spin,
+      lights: { key, rim, teal, spark },
+      getRadius: () => radius,
+      wrap,
+    });
 
     const frameCamera = () => {
+      if (sequenceActive) return;
       const width = wrap.clientWidth || 1;
       const height = wrap.clientHeight || 1;
       const narrow = width < 760;
@@ -149,15 +161,33 @@ export default function OrivonLogo() {
         drag.y += (0 - drag.y) * 0.012;
       }
 
-      if (reduce) {
-        spin.rotation.set(0.05, 0.32, 0);
-        spin.position.set(0, 0, 0);
+      const scrub = Number(wrap.dataset.scrub || 0);
+      const handled = sequence.update(scrub);
+      if (!handled) {
+        const resume = sequenceActive;
+        sequenceActive = false;
+        if (resume) {
+          spin.position.set(0, 0, 0);
+          spin.scale.set(1, 1, 1);
+          frameCamera();
+        }
+        if (reduce) {
+          spin.rotation.set(0.05, 0.32, 0);
+          spin.position.set(0, 0, 0);
+        } else {
+          spin.position.x = 0;
+          spin.rotation.y = Math.sin(t * 0.26) * 0.3 + pointer.x + drag.y;
+          spin.rotation.x = Math.sin(t * 0.34) * 0.055 + pointer.y * 0.35 + drag.x;
+          spin.rotation.z = Math.sin(t * 0.2) * 0.02;
+          spin.position.y = Math.sin(t * 0.65) * radius * 0.032;
+          spin.position.z = Math.sin(t * 0.42) * radius * 0.015;
+          rim.intensity = 1.35;
+          teal.intensity = 0.42;
+          spark.intensity = 0.28;
+          key.intensity = 2.05;
+        }
       } else {
-        spin.rotation.y = Math.sin(t * 0.26) * 0.3 + pointer.x + drag.y;
-        spin.rotation.x = Math.sin(t * 0.34) * 0.055 + pointer.y * 0.35 + drag.x;
-        spin.rotation.z = Math.sin(t * 0.2) * 0.02;
-        spin.position.y = Math.sin(t * 0.65) * radius * 0.032;
-        spin.position.z = Math.sin(t * 0.42) * radius * 0.015;
+        sequenceActive = true;
       }
 
       renderer.render(scene, camera);
@@ -177,6 +207,7 @@ export default function OrivonLogo() {
         wrap.dataset.radius = radius.toFixed(2);
         wrap.dataset.status = "ready";
         setStatus("ready");
+        sequence.preload();
       })
       .catch(() => {
         if (!disposed) setStatus("error");
@@ -187,6 +218,7 @@ export default function OrivonLogo() {
 
     return () => {
       disposed = true;
+      sequence.dispose();
       cancelAnimationFrame(frame);
       resize.disconnect();
       window.removeEventListener("pointermove", onPointerMove);

@@ -1,0 +1,289 @@
+.journey {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+
+.pillars {
+  --ink: #071525;
+  --cream: #faf2e8;
+  position: relative;
+  color: var(--ink);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  pointer-events: none;
+}
+
+.pillars__wash,
+.pillars__flash,
+.pillars__webgl {
+  position: absolute;
+  pointer-events: none;
+}
+
+.pillars__wash {
+  inset: 0;
+  background: var(--cream);
+  opacity: 0;
+}
+
+.journey > .hero3d__gl.is-sequence,
+.pillars > .hero3d__gl.is-sequence {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.journey > .pillars__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+}
+
+.pillars__flash {
+  inset: -12%;
+  z-index: 5;
+  background: radial-gradient(circle at 50% 46%, rgba(255, 246, 230, 0.92), rgba(124, 58, 237, 0.22) 26%, transparent 58%);
+  opacity: 0;
+}
+
+.pillars__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: clamp(0.7rem, 1.6vh, 1.15rem);
+  height: auto;
+  padding: 3.2rem 1.15rem 3.4rem;
+}
+
+.pillars__spacer {
+  display: none;
+}
+
+.pillars__heading {
+  text-align: center;
+}
+
+.pillars__heading h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4.4vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+}
+
+.pillars__heading p {
+  max-width: 38rem;
+  margin: 0.85rem auto 0;
+  color: rgba(7, 21, 37, 0.72);
+  font-size: clamp(0.98rem, 1.4vw, 1.15rem);
+  line-height: 1.5;
+}
+
+.pillars__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.6rem 1rem;
+  width: min(100%, 42rem);
+  margin: 0.4rem auto 0;
+}
+
+.pillar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  outline: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.pillar.is-hot h3,
+.pillar:focus-visible h3 {
+  color: var(--c);
+}
+
+.pillar.is-hot .pillar__body p:last-child {
+  color: rgba(7, 21, 37, 0.9);
+}
+
+.pillar:focus-visible {
+  outline: 2px solid var(--c);
+  outline-offset: 4px;
+}
+
+.pillar__slot {
+  position: relative;
+  width: min(100%, 11rem);
+  height: 8.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.pillar__contact {
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  width: 46%;
+  height: 0.55rem;
+  background: radial-gradient(ellipse, rgba(7, 21, 37, 0.28), transparent 72%);
+  opacity: calc(var(--drop, 0) * 0.7);
+  transform: translateX(-50%) scale(calc(0.72 + var(--drop, 0) * 0.28));
+}
+
+@media (max-width: 900px) {
+  .pillars {
+    background: #faf2e8;
+  }
+
+  .pillars__flash {
+    display: none;
+  }
+}
+
+.pillar__index {
+  margin: 0;
+  color: var(--c);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+}
+
+.pillar h3 {
+  margin: 0.35rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.pillar__body p:last-child {
+  max-width: 16rem;
+  margin: 0.45rem auto 0;
+  color: rgba(7, 21, 37, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+
+@media (min-width: 901px) {
+  .journey {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .journey .hero3d {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .pillars {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+  }
+
+  .pillars__wash {
+    inset: -12vh -8vw;
+  }
+
+  .pillars__content {
+    height: 100%;
+    justify-content: center;
+    padding: 5.4rem clamp(1.25rem, 4vw, 4.5rem) 1.4rem;
+    gap: 1.7rem;
+  }
+
+  .pillars__spacer {
+    display: none;
+  }
+
+  .pillar__slot {
+    width: 100%;
+    height: clamp(7.6rem, 18vh, 10rem);
+  }
+
+  .pillars__grid {
+    width: min(100%, 46rem);
+  }
+}
+
+@media (min-width: 1100px) {
+  .pillar__slot {
+    width: 100%;
+    height: clamp(13.5rem, 32vh, 17.5rem);
+  }
+
+  .pillars__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: min(100%, 76rem);
+    gap: 1.5rem;
+  }
+
+}
+
+@media (max-width: 430px) {
+  .pillar__slot {
+    height: 6.6rem;
+  }
+
+  .pillar h3 {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+  }
+
+  .pillar__body p:last-child {
+    font-size: 0.84rem;
+  }
+}
+
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .pillars__heading,
+  .pillar__body,
+  .pillars__wash,
+  .pillars__flash {
+    opacity: 0;
+  }
+
+  .pillar {
+    pointer-events: none;
+  }
+
+  .pillars.is-live .pillar {
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey,
+  .journey .hero3d {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .journey .hero3d {
+    min-height: 100dvh;
+  }
+
+  .pillars {
+    position: relative;
+    inset: auto;
+    background: #faf2e8;
+  }
+
+  .pillars__wash,
+  .pillars__flash,
+  .pillars__spacer {
+    display: none;
+  }
+
+  .pillars__heading,
+  .pillar__body {
+    opacity: 1;
+  }
+}

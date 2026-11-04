@@ -6,7 +6,6 @@
   --orange: #ff9a2a;
   --teal: #00a78e;
   position: relative;
-  isolation: isolate;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
@@ -90,7 +89,6 @@
 
 .hero3d__layout {
   position: relative;
-  z-index: 1;
   width: min(1480px, 100%);
   margin: 0 auto;
   display: grid;
@@ -212,6 +210,7 @@
 
 .hero3d__stage {
   position: relative;
+  z-index: 5;
   height: min(74vh, 760px);
   min-height: 420px;
   transform-origin: center center;
