@@ -70,20 +70,41 @@ export default function Navbar() {
       return undefined;
     }
 
-    const onScroll = () => {
-      const stage = document.getElementById("orivon-logo-stage");
-      const journey = Number(stage?.dataset.journey || 0);
-      if (journey > 0.04) {
-        setShowSiteNav(journey > 0.6);
+    const sync = () => {
+      // The hero and the pillars share a deep-space stage: keep the cinematic bar until it scrolls away.
+      const journeyEl = document.querySelector(".journey");
+      if (journeyEl) {
+        setShowSiteNav(journeyEl.getBoundingClientRect().bottom <= 72);
         return;
       }
       const hero = document.getElementById("hero");
       const limit = hero ? hero.offsetHeight * 0.72 : window.innerHeight * 0.72;
       setShowSiteNav(window.scrollY > limit);
     };
+    const onScroll = () => {
+      sync();
+      requestAnimationFrame(sync);
+    };
     onScroll();
+    let observer;
+    const attach = () => {
+      const stage = document.getElementById("orivon-logo-stage");
+      if (!stage || observer) return;
+      observer = new MutationObserver(sync);
+      observer.observe(stage, { attributes: true, attributeFilter: ["data-journey", "data-scrub"] });
+      sync();
+    };
+    attach();
+    const wait = window.setInterval(() => {
+      attach();
+      if (observer) window.clearInterval(wait);
+    }, 300);
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.clearInterval(wait);
+      observer?.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [isHome]);
 
   // Detectar scroll: uso IntersectionObserver con #hero si existe
@@ -138,9 +159,9 @@ export default function Navbar() {
     <>
       <header
         data-site-nav
-        className={`fixed w-full z-50 transition-all duration-300 ${
+        className={`fixed w-full z-50 transition-all duration-700 ease-out ${
           cinematic
-            ? "is-cinematic bg-transparent"
+            ? `is-cinematic ${scrolled ? "bg-[#071525]/70 backdrop-blur-md" : "bg-transparent"}`
             : scrolled || isHome
               ? "backdrop-blur-sm bg-white/95 shadow-md"
               : "bg-transparent"
@@ -152,12 +173,12 @@ export default function Navbar() {
             <a href="/" className={`flex items-center gap-3 ${cinematic ? "justify-self-start" : ""}`}>
               {cinematic ? (
                 <span className="font-heading text-[0.82rem] md:text-sm font-medium tracking-[0.22em] text-[#FAF2E8]">
-                  ORIVON STUDIO
+                  ORIVON STUDIOS
                 </span>
               ) : (
                 <img
                   src={icono}
-                  alt="Orivon Studio"
+                  alt="Orivon Studios"
                   className="h-full w-auto object-contain"
                 />
               )}
@@ -273,7 +294,7 @@ export default function Navbar() {
             <div className="px-3  flex items-center justify-between border-b border-gray-200">
               <img
                 src={logo}
-                alt="Orivon Studio"
+                alt="Orivon Studios"
                 className="h-20 w-auto object-contain"
               />
               <button

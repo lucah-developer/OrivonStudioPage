@@ -266,9 +266,9 @@ export default function Portfolio({ projects = ITEMS }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 md:mb-8 gap-3">
-          <h2 className="text-2xl sm:text-3xl font-heading font-bold text-[var(--text-primary)]">
+          <h1 className="text-2xl sm:text-3xl font-heading font-bold text-[var(--text-primary)]">
             Portfolio
-          </h2>
+          </h1>
 
           {/* En mobile usamos select para evitar overflow; en desktop botones */}
           {isMobile ? (

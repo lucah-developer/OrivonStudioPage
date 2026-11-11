@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-11-10T01:14:13.347Z",
+        "reason": "Assistant decision: existing site-wide brand typeface (tailwind.config.js, index.css, hero.css, projectReel.css); predates this task, changing it is out of scope"
+      }
+    ]
+  }
+}

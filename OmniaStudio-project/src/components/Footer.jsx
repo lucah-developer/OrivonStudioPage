@@ -48,7 +48,7 @@ export default function Footer() {
         <div className="flex flex-col gap-2">
           <h4 className="font-semibold text-[var(--text-primary)]">Contacto</h4>
           <a
-            href="mailto:info@orivonstudio.com"
+            href="mailto:orivonstudio2022@gmail.com"
             className="hover:text-[var(--accent-1)] transition"
           >
             orivonstudio2022@gmail.com
@@ -85,7 +85,7 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="relative z-10 text-center text-sm text-gray-500 py-6 border-t border-gray-200">
-        © {new Date().getFullYear()} Orivon Studio. Todos los derechos
+        © {new Date().getFullYear()} Orivon Studios. Todos los derechos
         reservados.
       </div>
     </footer>

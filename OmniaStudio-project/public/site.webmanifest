@@ -1,0 +1,25 @@
+{
+  "name": "Orivon Studios",
+  "short_name": "Orivon",
+  "description": "Diseño web, desarrollo a medida y experiencias 3D.",
+  "lang": "es",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071525",
+  "theme_color": "#071525",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "1563x1563",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

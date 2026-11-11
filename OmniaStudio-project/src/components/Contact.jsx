@@ -94,144 +94,52 @@ export default function Contact() {
   )}%20`;
 
   return (
-    <section id="contact" className="relative py-20 bg-bg overflow-hidden">
-      {/* Gradient sutil desde abajo hacia arriba */}
-      <div
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        // style={{
-        //   background:
-        //     "linear-gradient(to top, rgba(124, 58, 237, 0.2), rgba(255, 154, 42, 0.2), rgba(250, 242, 232, 0))",
-        //   zIndex: 0,
-        // }}
-      ></div>
+    <section id="contact" className="contact">
+      <div className="wrap">
+        <div className="section-head">
+          <h2>Contacto.</h2>
+          <p className="kicker">Presupuesto</p>
+        </div>
+        <p>Contanos el proyecto. Respondemos con una propuesta a medida.</p>
 
-      <div className="relative max-w-4xl mx-auto px-6 md:px-8 z-10">
-        <h2
-          className="text-3xl font-heading font-bold text-center text-[var(--text-primary)] mb-6"
-          data-aos="fade-up"
-        >
-          Solicitar presupuesto
-        </h2>
-
-        <p
-          className="text-center text-gray-600 mb-8"
-          data-aos="fade-up"
-          data-aos-delay="80"
-        >
-          Contanos brevemente tu proyecto y te respondemos con una propuesta a
-          medida. También podés pedir paquetes o solicitar que incluyamos
-          servicios complementarios (redes, branding, contratación de talento).
-        </p>
-
-        <form
-          onSubmit={handleSubmit}
-          className="bg-[var(--neutral-100)] p-6 rounded-2xl shadow-sm relative z-10"
-          data-aos="fade-up"
-          data-aos-delay="140"
-          noValidate
-        >
+        <form onSubmit={handleSubmit} noValidate>
           {status && (
-            <div
-              className={`mb-4 px-4 py-3 rounded-md text-sm ${
-                status.type === "success"
-                  ? "bg-green-50 text-green-800"
-                  : "bg-red-50 text-red-800"
-              }`}
-              role="alert"
-            >
+            <div className={`alert wide ${status.type === "success" ? "alert--ok" : "alert--bad"}`} role="alert">
               {status.text}
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Nombre */}
-            <label className="flex flex-col">
-              <span className="text-sm text-gray-600">Nombre y apellido *</span>
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                className="mt-2 px-3 py-2 rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-1)]/20"
-                required
-              />
-            </label>
-
-            {/* Email */}
-            <label className="flex flex-col">
-              <span className="text-sm text-gray-600">Email *</span>
-              <input
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                type="email"
-                className="mt-2 px-3 py-2 rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-1)]/20"
-                required
-              />
-            </label>
-
-            {/* Empresa / Proyecto */}
-            <label className="flex flex-col">
-              <span className="text-sm text-gray-600">Empresa / Proyecto</span>
-              <input
-                name="company"
-                value={form.company}
-                onChange={handleChange}
-                className="mt-2 px-3 py-2 rounded-md border border-gray-200 bg-white"
-              />
-            </label>
-
-            {/* Tipo de proyecto */}
-            <label className="flex flex-col">
-              <span className="text-sm text-gray-600">Tipo de proyecto *</span>
-              <select
-                name="projectType"
-                value={form.projectType}
-                onChange={handleChange}
-                className="mt-2 px-3 py-2 rounded-md border border-gray-200 bg-white"
-                required
-              >
-                <option value="">Seleccioná...</option>
-                {PROJECT_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            {/* Mensaje */}
-            <label className="flex flex-col md:col-span-2">
-              <span className="text-sm text-gray-600">Mensaje / Brief</span>
-              <textarea
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                rows={5}
-                className="mt-2 px-3 py-2 rounded-md border border-gray-200 bg-white"
-              />
-            </label>
-          </div>
-
-          {/* Botones */}
-          <div className="mt-6 flex items-center gap-4 flex-wrap">
-            <button
-              type="submit"
-              disabled={loading}
-              className={`inline-flex items-center gap-2 px-5 py-3 rounded-full text-white font-semibold shadow-sm transition ${
-                loading ? "opacity-60 cursor-not-allowed" : ""
-              }`}
-              style={{ background: "var(--accent-1)" }}
-            >
+          <label>
+            Nombre y apellido *
+            <input name="name" value={form.name} onChange={handleChange} required />
+          </label>
+          <label>
+            Email *
+            <input name="email" value={form.email} onChange={handleChange} type="email" required />
+          </label>
+          <label>
+            Empresa / Proyecto
+            <input name="company" value={form.company} onChange={handleChange} />
+          </label>
+          <label>
+            Tipo de proyecto *
+            <select name="projectType" value={form.projectType} onChange={handleChange} required>
+              <option value="">Seleccioná...</option>
+              {PROJECT_TYPES.map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </label>
+          <label className="wide">
+            Mensaje / Brief
+            <textarea name="message" value={form.message} onChange={handleChange} rows={5} />
+          </label>
+          <div className="contact__actions wide">
+            <button className="btn btn--night" type="submit" disabled={loading}>
               {loading ? "Enviando..." : "Enviar solicitud"}
             </button>
-
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-green-500 text-white font-semibold shadow-sm transition hover:bg-green-600"
-            >
-              📱 Contactar por WhatsApp
+            <a className="btn" href={whatsappLink} target="_blank" rel="noopener noreferrer">
+              WhatsApp
             </a>
           </div>
         </form>
