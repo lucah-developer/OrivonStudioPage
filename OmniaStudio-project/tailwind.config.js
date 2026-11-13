@@ -12,8 +12,10 @@ export default {
         "accent-3": "#00A78E",
       },
       fontFamily: {
-        heading: ["Space Grotesk", "sans-serif"],
-        body: ["Space Grotesk", "sans-serif"],
+        sans: ["Manrope", "system-ui", "sans-serif"],
+        serif: ["Instrument Serif", "Georgia", "serif"],
+        heading: ["Archivo", "Arial Narrow", "sans-serif"],
+        body: ["Manrope", "system-ui", "sans-serif"],
       },
     },
   },

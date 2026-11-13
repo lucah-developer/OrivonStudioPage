@@ -26,6 +26,7 @@
   margin: 0;
   background: #faf2e8;
   color: #0b2c4a;
+  font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.065em;
   line-height: 0.8;
@@ -57,21 +58,40 @@
   position: relative;
   width: 60%;
   margin: 0 auto;
-  color: rgba(11, 44, 74, 0.28);
+  color: #0b2c4a;
+  font-family: var(--font-display);
   font-size: clamp(1.8rem, 3.6vw, 3.5rem);
-  font-weight: 560;
+  font-weight: 600;
   letter-spacing: -0.045em;
   line-height: 1.05;
   text-align: center;
-  --clip-value: 100%;
 }
 
-.orivon-essence__wipe::before {
-  content: attr(data-text);
+.block-line-wrapper {
+  position: relative;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.block-line {
+  display: block;
+  position: relative;
+}
+
+.block-revealer {
   position: absolute;
-  inset: 0;
-  color: #0b2c4a;
-  clip-path: inset(0 0 var(--clip-value) 0);
+  top: 0;
+  left: 0;
+  width: 101%;
+  height: 101%;
+  background: #0b2c4a;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform;
 }
 
 @media (max-width: 1000px) {
@@ -85,5 +105,5 @@
   .orivon-essence__line:nth-child(2) { transform: none; }
   .orivon-essence__copy { margin-top: 0; }
   .orivon-essence__wipe { color: #0b2c4a; }
-  .orivon-essence__wipe::before { content: none; }
+  .block-revealer { display: none; }
 }

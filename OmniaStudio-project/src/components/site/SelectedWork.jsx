@@ -1,60 +1,51 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import gsap from "gsap";
-import { imagesgym } from "../../assets/GymOasis/index";
-import nosense from "../../assets/NoSense/NoSense.png";
-import { imagesturnify } from "../../assets/Turnify/index";
 import { imagesddec } from "../../assets/DDEC/index";
 import "./selected-work.css";
 
 const WORK = [
   {
+    slug: "red-brillante",
+    name: "Red Brillante",
+    category: "Plataformas",
+    cover: "/RedBrillante.png",
+    video: "/RedBrillante.mp4",
+    width: 821,
+    height: 914,
+  },
+  {
+    slug: "tourist",
     name: "Tourist",
     category: "Turismo",
     cover: "/TouristLanding.png",
     width: 1900,
     height: 915,
-    href: "https://www.tourist.com.ar/",
   },
   {
-    name: "Gym Oasis",
-    category: "CRM",
-    cover: imagesgym.uno,
-    width: 1919,
-    height: 907,
-    href: null,
+    slug: "clinicflow",
+    name: "ClinicFlow",
+    category: "App",
+    cover: "/ClinicFlowCover.jpg",
+    width: 1024,
+    height: 576,
   },
   {
-    name: "Turnify",
-    category: "Reservas",
-    cover: imagesturnify.uno,
-    width: 1448,
-    height: 667,
-    href: null,
-    fit: "contain",
+    slug: "rigio",
+    name: "Rigio",
+    category: "App",
+    cover: "/Rigio.jpg",
+    width: 1024,
+    height: 702,
   },
   {
-    name: "NoSense",
-    category: "E-commerce",
-    cover: nosense,
-    width: 1626,
-    height: 888,
-    href: null,
-  },
-  {
+    slug: "ddec",
     name: "D.D.E.C",
     category: "Constructora",
     cover: imagesddec.uno,
+    video: "/DDEC.mp4",
     width: 1832,
     height: 946,
-    href: null,
-  },
-  {
-    name: "Pulsomarkt",
-    category: "Landing",
-    cover: "/Pulso.png",
-    width: 1793,
-    height: 939,
-    href: "https://pulsomarkt.com/",
   },
 ];
 
@@ -95,9 +86,9 @@ export default function SelectedWork() {
       autoAlpha: 0,
     });
     gsap.set(tilt, { rotationX: 0, rotationY: 8, transformPerspective: 900, transformOrigin: "left center" });
-    gsap.set(card.querySelectorAll("img"), { autoAlpha: 0 });
+    gsap.set(card.querySelectorAll("img, video"), { autoAlpha: 0 });
     gsap.set(inks, { clipPath: "inset(0 100% 0 0)" });
-    gsap.set(rows, { clearProps: "paddingTop,paddingBottom" });
+    gsap.set(rows, { clearProps: "paddingTop,paddingBottom,letterSpacing,transform" });
 
     const moveCard = (clientX, clientY) => {
       if (narrow()) return;
@@ -118,13 +109,18 @@ export default function SelectedWork() {
           row.classList.toggle("is-active", on);
           gsap.to(inks[i], {
             clipPath: on ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
-            duration: reduce ? 0 : on ? 0.85 : 0.4,
-            ease: on ? "power3.out" : "power2.inOut",
+            duration: reduce ? 0 : on ? 0.7 : 0.4,
+            ease: "power2.out",
             overwrite: "auto",
           });
         });
-        [...card.querySelectorAll("img")].forEach((shot, i) => {
-          gsap.to(shot, { autoAlpha: i === index ? 1 : 0, duration: reduce ? 0 : 0.35, overwrite: true });
+        [...card.querySelectorAll("img, video")].forEach((shot, i) => {
+          const on = i === index;
+          gsap.to(shot, { autoAlpha: on ? 1 : 0, duration: reduce ? 0 : 0.35, overwrite: true });
+          if (shot.tagName === "VIDEO") {
+            if (on) shot.play().catch(() => {});
+            else shot.pause();
+          }
         });
         if (!narrow()) {
           gsap.to(card, { autoAlpha: 1, scale: 1, duration: reduce ? 0 : 0.45, ease: "power3.out", overwrite: "auto" });
@@ -138,9 +134,15 @@ export default function SelectedWork() {
       if (active === -1) return;
       rows.forEach((row, i) => {
         row.classList.remove("is-active");
-        gsap.to(inks[i], { clipPath: "inset(0 100% 0 0)", duration: reduce ? 0 : 0.35, ease: "power2.inOut", overwrite: "auto" });
+        gsap.to(inks[i], {
+          clipPath: "inset(0 100% 0 0)",
+          duration: reduce ? 0 : 0.4,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
       });
       gsap.to(card, { autoAlpha: 0, scale: 0.94, duration: reduce ? 0 : 0.3, overwrite: "auto" });
+      card.querySelectorAll("video").forEach((shot) => shot.pause());
       active = -1;
     };
 
@@ -167,7 +169,7 @@ export default function SelectedWork() {
       section.removeEventListener("mousemove", onMove);
       section.removeEventListener("mouseleave", hide);
       section.removeEventListener("focusin", onFocusIn);
-      gsap.killTweensOf([card, tilt, ...rows, ...inks, ...card.querySelectorAll("img")]);
+      gsap.killTweensOf([card, tilt, ...rows, ...inks, ...card.querySelectorAll("img, video")]);
     };
   }, []);
 
@@ -205,34 +207,48 @@ export default function SelectedWork() {
 
       <div className="orivon-index__list" ref={listRef}>
         {WORK.map((project, index) => (
-          <button
-            key={project.name}
-            type="button"
+          <Link
+            key={project.slug}
+            to={`/proyectos?proyecto=${project.slug}#detalle`}
             data-index={index}
             className="orivon-index__row"
-            onClick={() => setOpen(index)}
+            data-cursor="view"
+            data-cursor-label="Ver detalle"
+            aria-label={`${project.name}, ${project.category}`}
           >
             <span className="orivon-index__no">{pad(index + 1)}</span>
             <span className="orivon-index__name">
-              <span className="orivon-index__ghost">{project.name}</span>
-              <span className="orivon-index__ink" aria-hidden="true">{project.name}</span>
+              <span className="orivon-index__ghost">[{project.name}]</span>
+              <span className="orivon-index__ink" aria-hidden="true">[{project.name}]</span>
             </span>
             <span className="orivon-index__cat">{project.category}</span>
-          </button>
+          </Link>
         ))}
 
         <div className="orivon-index__card" ref={cardRef} aria-hidden="true">
           <div className="orivon-index__tilt" ref={tiltRef}>
             {WORK.map((project) => (
-              <img
-                key={project.name}
-                src={project.cover}
-                alt=""
-                width={project.width}
-                height={project.height}
-                className={project.fit === "contain" ? "is-contain" : ""}
-                decoding="async"
-              />
+              project.video ? (
+                <video
+                  key={project.name}
+                  src={project.video}
+                  poster={project.cover}
+                  muted
+                  loop
+                  playsInline
+                  preload="none"
+                />
+              ) : (
+                <img
+                  key={project.name}
+                  src={project.cover}
+                  alt=""
+                  width={project.width}
+                  height={project.height}
+                  className={project.fit === "contain" ? "is-contain" : ""}
+                  decoding="async"
+                />
+              )
             ))}
           </div>
         </div>

@@ -1,85 +1,153 @@
-import { useLayoutEffect, useRef } from "react";
-import { createPortal } from "react-dom";
+import { useEffect } from "react";
 import "./cursor.css";
 
+const OPTIONS = {
+  buttons: ".btn, .btnOrange, .sbtn, .navCta, .ctaBtn, .magnet, .chip, .vbtn, .lnk, .nzBtn, .stBtn, .toTop, button, [role='button']",
+  lines: ".navLinks a:not(.navCta), .lnkBig, .coInfo a, .spAlt a, .ftCol a, .tsBtn, [data-cursor='line']",
+  view: "[data-cursor='view']",
+  text: "input:not([type='range']):not([type='submit']):not([type='button']):not([type='checkbox']):not([type='radio']), textarea, [contenteditable='true']",
+  links: "a, label, select, summary, [role='tab'], input[type='range'], input[type='checkbox'], input[type='radio']",
+  dark: ".ftS, .svcS, .orivon-case, .spCard, .abZoomPanel, .stackCard.sc1, .ph.navy, .ph.deep, [data-cursor-theme='dark']",
+  viewLabel: "Ver proyecto",
+  follow: 0.18,
+  magnet: 0.12,
+  pad: 6,
+};
+
 export default function CursorDot() {
-  const dotRef = useRef(null);
-  const puckRef = useRef(null);
+  useEffect(() => {
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!fine) return undefined;
 
-  useLayoutEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dot = dotRef.current;
-    const puck = puckRef.current;
-    if (!dot || !puck) return undefined;
+    const root = document.documentElement;
+    const layer = document.createElement("div");
+    layer.className = "oc-layer";
+    layer.setAttribute("aria-hidden", "true");
+    layer.innerHTML = '<div class="oc-ring" data-mode="default"><span class="oc-label"></span></div><div class="oc-dot" data-mode="default"></div>';
+    document.body.appendChild(layer);
 
-    let currentX = window.innerWidth / 2;
-    let currentY = window.innerHeight / 2;
-    let targetX = currentX;
-    let targetY = currentY;
-    let tiltX = 0;
-    let tiltY = 0;
-    let targetTiltX = 0;
-    let targetTiltY = 0;
-    let scale = 1;
-    let targetScale = 1;
+    const ring = layer.querySelector(".oc-ring");
+    const dot = layer.querySelector(".oc-dot");
+    const label = layer.querySelector(".oc-label");
+    root.classList.add("oc-active");
+
+    const pos = { x: -100, y: -100 };
+    const ringPos = { x: -100, y: -100 };
+    let mode = "default";
+    let snapEl = null;
+    let lined = null;
+    let shown = false;
     let frame = 0;
-    let active = false;
 
-    const paint = () => {
-      dot.style.left = `${currentX}px`;
-      dot.style.top = `${currentY}px`;
-      puck.style.transform = `perspective(280px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(${scale})`;
+    const markLine = (el) => {
+      if (lined === el) return;
+      lined?.classList.remove("is-cursor-line");
+      lined = el;
+      el?.classList.add("is-cursor-line");
     };
 
-    const render = () => {
-      const ease = reduce ? 1 : 0.28;
-      currentX += (targetX - currentX) * ease;
-      currentY += (targetY - currentY) * ease;
-      tiltX += (targetTiltX - tiltX) * 0.18;
-      tiltY += (targetTiltY - tiltY) * 0.18;
-      scale += (targetScale - scale) * 0.2;
-      paint();
-      frame = requestAnimationFrame(render);
+    const setMode = (next, el) => {
+      snapEl = next === "button" || next === "line" ? el : null;
+      markLine(next === "line" ? el : null);
+      if (next === "view") label.textContent = el?.dataset.cursorLabel || OPTIONS.viewLabel;
+      if (next === mode) return;
+      mode = next;
+      ring.dataset.mode = next;
+      dot.dataset.mode = next;
+      if (next !== "view") label.textContent = "";
+    };
+
+    const pick = (target) => {
+      if (!target || !target.closest) return setMode("default");
+      root.classList.toggle("oc-dark", Boolean(target.closest(OPTIONS.dark)));
+      const forced = target.closest("[data-cursor]");
+      if (forced && forced.dataset.cursor !== "line") return setMode(forced.dataset.cursor, forced);
+      if (target.closest(OPTIONS.text)) return setMode("text");
+      const line = target.closest(OPTIONS.lines) || (forced?.dataset.cursor === "line" ? forced : null);
+      if (line) return setMode("line", line);
+      const button = target.closest(OPTIONS.buttons);
+      if (button) return setMode("button", button);
+      const view = target.closest(OPTIONS.view);
+      if (view) return setMode("view", view);
+      if (target.closest(OPTIONS.links)) return setMode("link");
+      return setMode("default");
+    };
+
+    const loop = () => {
+      if (snapEl && snapEl.isConnected && mode === "line") {
+        const box = snapEl.getBoundingClientRect();
+        const nav = snapEl.matches(".navLinks a, .tsBtn");
+        const ease = reduce ? 1 : 0.22;
+        ringPos.x += (box.left + box.width / 2 - ringPos.x) * ease;
+        ringPos.y += ((nav ? box.bottom - 9 : box.bottom - 1) - ringPos.y) * ease;
+        ring.style.width = `${box.width}px`;
+        ring.style.height = "2px";
+      } else if (snapEl && snapEl.isConnected) {
+        const box = snapEl.getBoundingClientRect();
+        const centerX = box.left + box.width / 2;
+        const centerY = box.top + box.height / 2;
+        const aimX = centerX + (pos.x - centerX) * OPTIONS.magnet;
+        const aimY = centerY + (pos.y - centerY) * OPTIONS.magnet;
+        const ease = reduce ? 1 : 0.25;
+        ringPos.x += (aimX - ringPos.x) * ease;
+        ringPos.y += (aimY - ringPos.y) * ease;
+        ring.style.width = `${box.width + OPTIONS.pad * 2}px`;
+        ring.style.height = `${box.height + OPTIONS.pad * 2}px`;
+      } else {
+        const ease = reduce ? 1 : OPTIONS.follow;
+        ringPos.x += (pos.x - ringPos.x) * ease;
+        ringPos.y += (pos.y - ringPos.y) * ease;
+        ring.style.width = "";
+        ring.style.height = "";
+      }
+      ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`;
+      dot.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`;
+      frame = requestAnimationFrame(loop);
     };
 
     const onMove = (event) => {
-      if (event.pointerType && event.pointerType !== "mouse" && event.pointerType !== "pen") return;
-      const dx = event.clientX - targetX;
-      const dy = event.clientY - targetY;
-      targetX = event.clientX;
-      targetY = event.clientY;
-      if (!active) {
-        active = true;
-        currentX = targetX;
-        currentY = targetY;
-        document.documentElement.classList.add("orivon-dot");
-        dot.classList.add("is-on");
+      pos.x = event.clientX;
+      pos.y = event.clientY;
+      if (!shown) {
+        shown = true;
+        ringPos.x = pos.x;
+        ringPos.y = pos.y;
+        root.classList.add("oc-on");
       }
-      targetTiltY = Math.max(-16, Math.min(16, dx * 0.4));
-      targetTiltX = Math.max(-14, Math.min(14, -dy * 0.35));
-      paint();
     };
-
-    const onOver = (event) => {
-      const node = event.target instanceof Element ? event.target : null;
-      targetScale = node?.closest("a, button") ? 1.15 : 1;
+    const onOver = (event) => pick(event.target);
+    const onDown = () => root.classList.add("oc-down");
+    const onUp = () => root.classList.remove("oc-down");
+    const onLeave = () => {
+      shown = false;
+      root.classList.remove("oc-on");
     };
+    const onScroll = () => pick(document.elementFromPoint(pos.x, pos.y));
 
-    frame = requestAnimationFrame(render);
-    window.addEventListener("pointermove", onMove, { capture: true, passive: true });
-    window.addEventListener("pointerover", onOver, { capture: true });
+    window.addEventListener("pointermove", onMove, { passive: true });
+    document.addEventListener("pointerover", onOver);
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("pointerup", onUp);
+    document.addEventListener("pointerleave", onLeave);
+    window.addEventListener("blur", onLeave);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    frame = requestAnimationFrame(loop);
+
     return () => {
-      document.documentElement.classList.remove("orivon-dot");
       cancelAnimationFrame(frame);
-      window.removeEventListener("pointermove", onMove, { capture: true });
-      window.removeEventListener("pointerover", onOver, { capture: true });
+      window.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerover", onOver);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
+      document.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("blur", onLeave);
+      window.removeEventListener("scroll", onScroll);
+      lined?.classList.remove("is-cursor-line");
+      layer.remove();
+      root.classList.remove("oc-active", "oc-on", "oc-down", "oc-dark");
     };
   }, []);
 
-  return createPortal(
-    <div className="orivon-cursor" ref={dotRef} aria-hidden="true">
-      <span className="orivon-cursor__puck" ref={puckRef} />
-    </div>,
-    document.body
-  );
+  return null;
 }

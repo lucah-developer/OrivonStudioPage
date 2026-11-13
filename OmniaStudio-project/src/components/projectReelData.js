@@ -1,6 +1,5 @@
 import nosense from "../assets/NoSense/NoSense.png";
 import { imagesgym } from "../assets/GymOasis/index";
-import { imagesturnify } from "../assets/Turnify/index";
 import { imagesddec } from "../assets/DDEC/index";
 
 export const PROJECTS = [
@@ -15,7 +14,7 @@ export const PROJECTS = [
     name: "Pulsomarkt",
     category: "Landing",
     description: "Landing de conversión con selector de idioma y una pieza comercial clara.",
-    cover: "/Pulso.png",
+    cover: "/Pulso.jpg",
     destination: "https://pulsomarkt.com/",
   },
   {
@@ -26,10 +25,24 @@ export const PROJECTS = [
     destination: "/portfolio",
   },
   {
-    name: "Turnify",
-    category: "Reservas",
-    description: "Agenda de turnos con reservas por WhatsApp y una operación simple.",
-    cover: imagesturnify.uno,
+    name: "Red Brillante",
+    category: "Plataformas",
+    description: "Dos plataformas: distribuidora de limpieza y EPP, y servicios de facility.",
+    cover: "/RedBrillante.png",
+    destination: "https://redbrillante.com/",
+  },
+  {
+    name: "ClinicFlow",
+    category: "App",
+    description: "App SaaS para la gestión clínica: turnos, pacientes y automatización.",
+    cover: "/ClinicFlowCover.jpg",
+    destination: "https://www.clinicflowapp.com.ar/login",
+  },
+  {
+    name: "Rigio",
+    category: "App",
+    description: "Comparación de productos tecnológicos con un asistente que orienta la compra.",
+    cover: "/Rigio.jpg",
     destination: "/portfolio",
   },
   {

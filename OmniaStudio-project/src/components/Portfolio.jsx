@@ -18,14 +18,11 @@ import {
 } from "react-icons/fi";
 
 import Tourist from "../../public/TouristLanding.png";
-import Pulso from "../../public/Pulso.png";
 import { images } from "../assets/Tourist/index";
 import { imagesPulso } from "../assets/Pulsomarkt/index";
 import { imagesNoSense } from "../assets/NoSense/index";
 import { imagesgym } from "../assets/GymOasis/index";
 import { imagesddec } from "../assets/DDEC/index";
-import { imagesturnify } from "../assets/Turnify/index";
-import video from "../assets/Turnify/video.mp4";
 
 /* ====== DATA (sin cambios de imports de images) ====== */
 const ITEMS = [
@@ -60,9 +57,9 @@ const ITEMS = [
     client: "Pulsomarkt",
     year: 2024,
     role: "Freelance - Frontend",
-    image: Pulso,
+    image: "/Pulso.jpg",
     desc: "Landing optimizada para conversiones, selector de idioma y animaciones interactivas.",
-    images: [imagesPulso?.Boost, imagesPulso?.Hero, imagesPulso?.Pulso],
+    images: ["/Pulso.jpg", imagesPulso?.Boost, imagesPulso?.Hero, imagesPulso?.Pulso],
     link: "https://pulsomarkt.com/",
     tech: ["React", "TailwindCSS", "AOS (anim.)", "Figma"],
     features: [
@@ -107,20 +104,51 @@ const ITEMS = [
   },
   {
     id: 4,
-    title: "Turnify - Reservas programadas",
+    title: "Red Brillante",
+    category: "Plataformas",
+    type: "Sitio",
+    client: "Red Brillante",
+    year: 2026,
+    role: "Sitio y plataformas",
+    image: "/RedBrillante.png",
+    desc: "Dos plataformas en un mismo sitio: la distribuidora de productos de limpieza y EPP, y los servicios de facility para cada cliente.",
+    images: ["/RedBrillante.png"],
+    link: "https://redbrillante.com/",
+    tech: ["Sitio web"],
+    features: [{ key: "web", label: "Plataformas", icon: "FiTool" }],
+    highlights: ["Distribuidora de productos y EPP", "Servicios de limpieza y mantenimiento"],
+  },
+  {
+    id: 7,
+    title: "ClinicFlow",
     category: "App",
-    type: "Booking",
-    client: "Turnify",
-    year: 2024,
-    role: "Desarrollo App",
-    image: imagesturnify?.uno,
-    desc: "Sistema de reservas con agendamiento por WhatsApp y panel administrativo básico.",
-    images: [imagesturnify?.uno],
-    tech: ["React", "WhatsApp Integration", "TailwindCSS"],
-    features: [{ key: "booking", label: "Reservas/Agenda", icon: "FiTool" }],
-    highlights: ["Agenda por WhatsApp", "Notificaciones a usuarios"],
-    videoSrc: video || null,
-    videoPoster: imagesturnify?.uno || null,
+    type: "App",
+    client: "ClinicFlow",
+    year: 2026,
+    role: "App de gestión clínica",
+    image: "/ClinicFlowCover.jpg",
+    desc: "Plataforma SaaS para ordenar la operación de una clínica: turnos, pacientes y procesos, con automatización e inteligencia artificial.",
+    images: ["/ClinicFlowCover.jpg"],
+    link: "https://www.clinicflowapp.com.ar/login",
+    tech: ["SaaS"],
+    features: [{ key: "app", label: "App", icon: "FiTool" }],
+    highlights: ["Gestión clínica", "Turnos y pacientes", "Automatización e inteligencia artificial"],
+  },
+  {
+    id: 8,
+    title: "Rigio",
+    category: "App",
+    type: "App",
+    client: "Rigio",
+    year: 2026,
+    role: "App de comparación con IA",
+    image: "/Rigio.jpg",
+    desc: "Plataforma para buscar, evaluar y comparar productos tecnológicos, con un asistente que interpreta el presupuesto y orienta la compra.",
+    images: ["/Rigio.jpg"],
+    link: null,
+    tech: ["React", "PostgreSQL", "Prisma", "APIs", "OpenRouter", "LLMs"],
+    features: [{ key: "app", label: "App", icon: "FiTool" }],
+    highlights: ["Comparación según necesidad y presupuesto", "Asistente que recomienda y propone alternativas", "React, PostgreSQL, Prisma y modelos de lenguaje"],
   },
   {
     id: 5,

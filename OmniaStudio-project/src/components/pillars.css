@@ -16,7 +16,7 @@
     linear-gradient(180deg, #071525 0%, #050d1a 100%);
   position: relative;
   color: var(--cream);
-  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-family: var(--font-display);
   pointer-events: none;
   background: transparent;
 }

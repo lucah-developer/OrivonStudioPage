@@ -4,7 +4,6 @@ import Autoplay from "embla-carousel-autoplay";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Tourist from "../assets/Testimonials/Tourist.png";
 import Oasis from "../assets/Testimonials/Oasis.jpg";
-import Turnify from "../assets/Testimonials/turnify.png";
 import Nosense from "../assets/Testimonials/NoSenseLogo.png";
 import Pulsomarkt from "../assets/Testimonials/Pulsomarkt.png";
 
@@ -24,11 +23,11 @@ const TESTIMONIALS = [
       "Implementaron un CRM con notificaciones automáticas y funcionalidades de administración que optimizaron nuestros procesos diarios y la retención de alumnos.",
   },
   {
-    logo: Turnify,
-    client: "Peluquería Style",
-    sector: "App de reservas automáticas",
+    logo: "/red-brillante-mark.png?v=2",
+    client: "Red Brillante",
+    sector: "Productos y servicios",
     quote:
-      "La app permitió a nuestros clientes reservar turnos por WhatsApp y reduce la carga administrativa; el sistema es intuitivo y estable.",
+      "Supieron entender las necesidades de nuestra empresa y adaptar los dos negocios en una sola web, grandes animaciones y una estructura genial. Fueron rápidos en el desarrollo y muy bien predispuestos a aclarar dudas y realizar cambios.",
   },
   {
     logo: Nosense,

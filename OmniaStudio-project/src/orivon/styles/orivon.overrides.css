@@ -1,0 +1,23 @@
+/* Ajustes de integración del diseño fase 2 dentro del sitio existente. */
+
+/* La nav vive en su propio contenedor .ov: el sticky va en el header. */
+.ovNav { position: sticky; top: 0; z-index: 40; overflow: visible; }
+.ov .nav { position: relative; top: auto; }
+
+/* site.css (hero) define un .wrap global: dentro de .ov manda el del diseño. */
+.ov .wrap { width: auto; }
+
+/* Imágenes reales dentro de los marcos .ph del diseño. */
+.ov .ph { position: relative; overflow: hidden; }
+.ov .ph .phImg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.ov .ph .phImg.phVideo { object-position: center center; }
+.ov .ph .phImg.contain { object-fit: contain; padding: 6%; }
+.ov .ph.hasImg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7, 21, 37, 0.42) 0%, rgba(7, 21, 37, 0) 34%, rgba(7, 21, 37, 0) 62%, rgba(7, 21, 37, 0.5) 100%); pointer-events: none; }
+.ov .ph.hasImg { color: rgba(250, 242, 232, 0.92); }
+.ov .ph.hasImg .phRow { position: relative; z-index: 1; }
+.ov .ph.hasImg b { opacity: 0.6; }
+
+/* Logos reales en los testimonios. */
+.ov .avatar img { width: 100%; height: 100%; object-fit: cover; }
+.ov .avatar:has(img) { border-style: solid; background: var(--cream); overflow: hidden; }
+.ov .avatar.avatarMark:has(img) { background: transparent; border-color: transparent; }

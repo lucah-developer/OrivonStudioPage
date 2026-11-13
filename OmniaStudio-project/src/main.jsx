@@ -17,7 +17,12 @@ const openAtHero = () => {
 openAtHero();
 window.addEventListener("pageshow", openAtHero);
 
-AOS.init({ duration: 700, once: true });
+AOS.init({
+  once: true,
+  duration: 900,
+  offset: 80,
+  disable: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+});
 startSmoothScroll();
 
 createRoot(document.getElementById("root")).render(

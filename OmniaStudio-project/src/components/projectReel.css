@@ -7,7 +7,7 @@
   overflow: hidden;
   background: var(--paper);
   color: var(--ink);
-  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-family: var(--font-display);
   isolation: isolate;
 }
 
