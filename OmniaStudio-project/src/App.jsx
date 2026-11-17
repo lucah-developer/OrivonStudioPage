@@ -4,13 +4,16 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import AOS from "aos";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CursorDot from "./components/site/CursorDot";
+import { scrollToElement } from "./smoothScroll.js";
 import HomePage from "./components/site/HomePage";
 import BeadLab from "./components/site/BeadLab";
 import Nav from "./orivon/components/Nav";
 import Projects from "./orivon/pages/Projects";
 import About from "./orivon/pages/About";
 import StartProject from "./orivon/pages/StartProject";
+import ServicesPage from "./orivon/pages/ServicesPage";
 import "./orivon/styles/orivon.scoped.css";
+import "./orivon/styles/services.scoped.css";
 import "./orivon/styles/orivon.overrides.css";
 
 const SITE = "Orivon Studio";
@@ -23,13 +26,17 @@ const META = {
     title: `Proyectos — ${SITE}`,
     description: "Proyectos de Orivon Studio: reservas, CRM, tiendas, landings y plataformas diseñadas y desarrolladas a medida.",
   },
+  "/servicios": {
+    title: `Servicios — ${SITE}`,
+    description: "Brand, web, plataformas a medida, e-commerce e IA: qué incluye cada servicio de Orivon Studio y cómo trabajamos.",
+  },
   "/estudio": {
     title: `Estudio — ${SITE}`,
     description: "Somos Orivon: un estudio digital independiente que diseña y desarrolla experiencias web, plataformas, apps y agentes inteligentes.",
   },
   "/iniciar-proyecto": {
     title: `Iniciar proyecto — ${SITE}`,
-    description: "Contanos tu idea: marca, sitio, plataforma, e-commerce o automatización. Te respondemos por email.",
+    description: "Contanos tu idea: marca, sitio, plataforma, e-commerce o automatización. Te respondemos por WhatsApp.",
   },
 };
 
@@ -64,7 +71,8 @@ function RouteScroll() {
       AOS.refreshHard();
       ScrollTrigger.refresh();
       // Después del refresh: ScrollTrigger restaura la posición previa al recalcular.
-      if (id) document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (id) scrollToElement(document.getElementById(id));
+      else if (typeof window.__orivonScrollTo === "function") window.__orivonScrollTo(0);
       else window.scrollTo({ top: 0, behavior: "instant" });
     }, 60);
     return () => clearTimeout(t);
@@ -95,6 +103,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/proyectos" element={page(<Projects />)} />
+          <Route path="/servicios" element={page(<ServicesPage />)} />
           <Route path="/estudio" element={page(<About />)} />
           <Route path="/iniciar-proyecto" element={page(<StartProject />)} />
           <Route path="/portfolio" element={<Navigate to="/proyectos" replace />} />

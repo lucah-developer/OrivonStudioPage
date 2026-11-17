@@ -21,3 +21,6 @@
 .ov .avatar img { width: 100%; height: 100%; object-fit: cover; }
 .ov .avatar:has(img) { border-style: solid; background: var(--cream); overflow: hidden; }
 .ov .avatar.avatarMark:has(img) { background: transparent; border-color: transparent; }
+
+/* /servicios: el índice y las anclas (#web, #shop…) no quedan tapados por la nav fija. */
+.ov .sv2Sec { scroll-margin-top: 73px; }

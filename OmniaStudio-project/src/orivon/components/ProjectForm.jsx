@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 import { FiCheck, FiArrowRight } from 'react-icons/fi';
-import { CONTACT, SERVICES } from '../data.js';
-import { sendContact } from '../lib/contact.js';
+import { SERVICES } from '../data.js';
+import { openWhatsappContact, whatsappContactUrl } from '../lib/contact.js';
 
 const TYPES = [...SERVICES.map((s) => ({ id: s.id, label: s.short })), { id: 'other', label: 'Otro' }];
 const labelOf = (id) => TYPES.find((t) => t.id === id)?.label ?? '';
@@ -25,7 +25,8 @@ function validate(f) {
 export default function ProjectForm({ initialType = '', onTypeChange }) {
   const [f, setF] = useState(EMPTY(initialType));
   const [err, setErr] = useState({});
-  const [status, setStatus] = useState('idle'); // idle | sending | sent | failed
+  const [status, setStatus] = useState('idle'); // idle | sent | failed
+  const [waUrl, setWaUrl] = useState('');
 
   const set = (k) => (e) => {
     const v = typeof e === 'string' ? e : e.target.value;
@@ -34,7 +35,7 @@ export default function ProjectForm({ initialType = '', onTypeChange }) {
     if (k === 'type') onTypeChange?.(v);
   };
 
-  const submit = async (e) => {
+  const submit = (e) => {
     e.preventDefault();
     const v = validate(f);
     setErr(v);
@@ -42,21 +43,18 @@ export default function ProjectForm({ initialType = '', onTypeChange }) {
       document.getElementById(`c-${Object.keys(v)[0]}`)?.focus();
       return;
     }
-    setStatus('sending');
-    try {
-      await sendContact({ ...f, type: labelOf(f.type) });
-      setStatus('sent');
-    } catch {
-      setStatus('failed');
-    }
+    const url = whatsappContactUrl({ ...f, type: labelOf(f.type) });
+    setWaUrl(url);
+    const opened = openWhatsappContact({ ...f, type: labelOf(f.type) });
+    setStatus(opened ? 'sent' : 'failed');
   };
 
   if (status === 'sent') {
     return (
       <div className="ok" role="status">
         <div className="okMark" aria-hidden="true"><FiCheck size={28} /></div>
-        <p className="disp">Mensaje <span className="ser">enviado.</span></p>
-        <p>Gracias, {f.name}. Te respondemos a {f.email}.</p>
+        <p className="disp">Mensaje <span className="ser">listo.</span></p>
+        <p>Gracias, {f.name}. Se abrió WhatsApp con tu mensaje.</p>
         <button className="lnk" type="button" onClick={() => { setF(EMPTY(initialType)); setStatus('idle'); onTypeChange?.(initialType); }}>Escribir otro mensaje</button>
       </div>
     );
@@ -66,7 +64,7 @@ export default function ProjectForm({ initialType = '', onTypeChange }) {
 
   return (
     <form className="form" noValidate onSubmit={submit} aria-label="Contanos tu proyecto">
-      {status === 'failed' && <p className="sum" role="alert">No se pudo enviar. Probá de nuevo o escribinos a {CONTACT.email}.</p>}
+      {status === 'failed' && <p className="sum" role="alert">El navegador bloqueó la ventana. <a href={waUrl} target="_blank" rel="noreferrer">Abrir WhatsApp</a>.</p>}
 
       <fieldset className={clsx('fld', err.type && 'bad')}>
         <legend className="q">¿Qué necesitás?</legend>
@@ -102,9 +100,9 @@ export default function ProjectForm({ initialType = '', onTypeChange }) {
       </div>
 
       <div className="send">
-        <small>Solo usamos tus datos para responderte.</small>
-        <button className="sbtn" type="submit" disabled={status === 'sending'} aria-busy={status === 'sending'}>
-          {status === 'sending' ? 'Enviando' : 'Enviar'} <FiArrowRight size={20} aria-hidden="true" />
+        <small>Se abre WhatsApp con tus datos. No enviamos correo.</small>
+        <button className="sbtn" type="submit">
+          WhatsApp <FiArrowRight size={20} aria-hidden="true" />
         </button>
       </div>
     </form>

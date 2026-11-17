@@ -11,6 +11,7 @@ export const CONTACT = {
   phoneHref: 'tel:+5492604309716',
   instagram: 'https://www.instagram.com/orivonstudio/',
   instagramHandle: '@orivonstudio',
+  tiktok: 'https://www.tiktok.com/@orivonstudio',
   whatsapp: 'https://wa.me/5492604309716',
 };
 
@@ -75,28 +76,41 @@ export const TESTIMONIALS = [
   { client: 'Pulsomarkt', project: 'Landing', person: 'Pulsomarkt', role: 'Captación', logo: pulsoMark, text: 'Diseñaron una landing efectiva para captar leads en el exterior; diseño y performance alineados a nuestros objetivos de marketing.' },
 ];
 
-// Disciplina (id de SERVICES) de cada caso real.
-const DISCIPLINE = { tourist: 'platform', 'gym-oasis': 'platform', 'red-brillante': 'platform', clinicflow: 'app', rigio: 'app', nosense: 'shop', ddec: 'web', pulsomarkt: 'web' };
+// Disciplinas (ids de SERVICES) de cada caso. Un proyecto puede entrar en varias.
+const DISCIPLINE = {
+  tourist: ['platform', 'brand'],
+  'gym-oasis': ['platform'],
+  'red-brillante': ['platform', 'shop'],
+  clinicflow: ['app'],
+  rigio: ['app', 'platform', 'ai'],
+  nosense: ['shop'],
+  ddec: ['web'],
+  pulsomarkt: ['web'],
+};
 
 const EXTRA_DISCIPLINES = [{ id: 'app', name: 'App', short: 'App' }];
 
-export const PROJECTS = CASES.map((c, i) => ({
-  slug: c.slug,
-  name: c.name,
-  client: c.client,
-  year: c.year,
-  d: DISCIPLINE[c.slug] || 'web',
-  category: c.category,
-  summary: c.summary,
-  points: c.points,
-  traits: c.traits,
-  images: c.images,
-  cover: c.cover,
-  video: c.video,
-  fit: c.fit,
-  href: c.href,
-  featured: i === 0,
-}));
+export const PROJECTS = CASES.map((c, i) => {
+  const disciplines = DISCIPLINE[c.slug] || ['web'];
+  return {
+    slug: c.slug,
+    name: c.name,
+    client: c.client,
+    year: c.year,
+    d: disciplines[0],
+    ds: disciplines,
+    category: c.category,
+    summary: c.summary,
+    points: c.points,
+    traits: c.traits,
+    images: c.images,
+    cover: c.cover,
+    video: c.video,
+    fit: c.fit,
+    href: c.href,
+    featured: i === 0,
+  };
+});
 
 // Capacidades declaradas en el schema de index.html (knowsAbout)
 export const KNOWS = ['Diseño web', 'Desarrollo web', 'Experiencias 3D', 'UX', 'Motion design'];

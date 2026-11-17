@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
-import { imagesddec } from "../../assets/DDEC/index";
 import "./selected-work.css";
 
 const WORK = [
@@ -42,10 +41,10 @@ const WORK = [
     slug: "ddec",
     name: "D.D.E.C",
     category: "Constructora",
-    cover: imagesddec.uno,
-    video: "/DDEC.mp4",
-    width: 1832,
-    height: 946,
+    cover: "/ddec/hero.jpg",
+    video: "/DDEC.mp4?v=3",
+    width: 1024,
+    height: 460,
   },
 ];
 

@@ -9,7 +9,7 @@ export default function Nav() {
       </Link>
       <nav className="navLinks" aria-label="Principal">
         <NavLink to="/proyectos" className={({ isActive }) => (isActive ? 'cur' : undefined)}>Proyectos</NavLink>
-        <Link to="/#servicios">Servicios</Link>
+        <NavLink to="/servicios" className={({ isActive }) => (isActive ? 'cur' : undefined)}>Servicios</NavLink>
         <NavLink to="/estudio" className={({ isActive }) => (isActive ? 'cur' : undefined)}>Estudio</NavLink>
         <Link to="/#contacto">Contacto</Link>
         <NavLink to="/iniciar-proyecto" className={({ isActive }) => (isActive ? 'navCta on' : 'navCta')}>Iniciar proyecto</NavLink>

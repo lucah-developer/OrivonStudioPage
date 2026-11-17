@@ -5,6 +5,7 @@ import { FiGrid, FiList } from 'react-icons/fi';
 import { PROJECTS, SERVICES, serviceById } from '../data.js';
 import { TopRow, Line, Arrow } from '../components/Reveal.jsx';
 import Footer from '../sections/Footer.jsx';
+import { scrollToElement } from '../../smoothScroll.js';
 
 const SPANS = ['sA', 'sB', 'sC', 'sD', 'sD', 'sE', 'sA'];
 const TONES = ['deep', 'sand', 'navy', 'sand', 'deep', 'navy', 'sand'];
@@ -46,17 +47,21 @@ export default function Projects() {
   const opened = useRef(false);
   const detail = PROJECTS.find((p) => p.slug === active) || PROJECTS[0];
   const matches = useMemo(
-    () => PROJECTS.filter((p) => filter === 'all' || p.d === filter),
+    () => PROJECTS.filter((p) => filter === 'all' || (p.ds || [p.d]).includes(filter)),
     [filter],
   );
   const shown = matches.filter((p) => p.slug !== detail.slug);
   const fname = filter === 'all' ? 'Todas las disciplinas' : serviceById[filter].name;
   const num = (p) => String(PROJECTS.indexOf(p) + 1).padStart(2, '0');
+  const disciplineLabel = (p) => {
+    const ids = p.ds?.length ? p.ds : [p.d];
+    return ids.map((id) => serviceById[id]?.[ids.length > 1 ? 'short' : 'name']).filter(Boolean).join(' · ');
+  };
   const listKey = `${filter}-${view}-${detail.slug}`;
 
   const openDetail = (slug) => {
     if (slug === detail.slug) {
-      document.getElementById('detalle')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToElement(document.getElementById('detalle'));
       return;
     }
     setActive(slug);
@@ -76,8 +81,8 @@ export default function Projects() {
       opened.current = true;
       return undefined;
     }
-    document.getElementById('detalle')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    return undefined;
+    const frame = requestAnimationFrame(() => scrollToElement(document.getElementById('detalle')));
+    return () => cancelAnimationFrame(frame);
   }, [active]);
 
   const shots = detail.images?.length ? detail.images : [];
@@ -109,12 +114,12 @@ export default function Projects() {
 
           <article className="feat" id="detalle">
             <div className="featImg">
-              <Ph tone="navy" label={serviceById[detail.d].name} n={num(detail)} img={detail.cover} fit={detail.fit} video={detail.video} />
+              <Ph tone="navy" label={disciplineLabel(detail)} n={num(detail)} img={detail.cover} fit={detail.fit} video={detail.video} />
             </div>
             <div className="featMeta">
               <h2 className="disp">{detail.name}</h2>
               <div className="featCopy">
-                <p className="featKicker">{detail.client} · {detail.year} · {serviceById[detail.d].name}{detail.traits?.length ? ` · ${detail.traits.join(' · ')}` : ''}</p>
+                <p className="featKicker">{detail.client} · {detail.year} · {disciplineLabel(detail)}{detail.traits?.length ? ` · ${detail.traits.join(' · ')}` : ''}</p>
                 <p>{detail.summary}</p>
                 {detail.points?.length > 0 && (
                   <ul>
@@ -140,7 +145,7 @@ export default function Projects() {
         <div className="bar" id="lista">
           <div className="chips" role="group" aria-label="Filtrar por disciplina">
             {[{ id: 'all', short: 'Todos' }, ...SERVICES, { id: 'app', short: 'App' }].map((s) => {
-              const count = s.id === 'all' ? PROJECTS.length : PROJECTS.filter((p) => p.d === s.id).length;
+              const count = s.id === 'all' ? PROJECTS.length : PROJECTS.filter((p) => (p.ds || [p.d]).includes(s.id)).length;
               return (
                 <button key={s.id} type="button" className={clsx('chip', filter === s.id && 'sel')} aria-pressed={filter === s.id} onClick={() => setFilter(s.id)}>
                   {s.short} <sup>{count}</sup>
@@ -169,7 +174,7 @@ export default function Projects() {
           <div className="gal" key={listKey}>
             {shown.map((p, i) => (
               <Case key={p.slug} slug={p.slug} onOpen={openDetail} className={clsx('card', shown.length === 1 ? 'sE' : SPANS[i % SPANS.length])} style={{ animationDelay: `${Math.round(70 * Math.sqrt(i) * 1.4)}ms` }}>
-                <div className="cImg"><Ph tone={TONES[i % TONES.length]} label={serviceById[p.d].name} n={num(p)} img={p.cover} fit={p.fit} video={p.video} /></div>
+                <div className="cImg"><Ph tone={TONES[i % TONES.length]} label={disciplineLabel(p)} n={num(p)} img={p.cover} fit={p.fit} video={p.video} /></div>
                 <div className="cMeta">
                   <span className="num">{num(p)}</span>
                   <div><h3>{p.name}</h3><p>{p.client} · {p.year}</p></div>
@@ -192,7 +197,7 @@ export default function Projects() {
                 <span className="num" role="cell">{num(p)}</span>
                 <span className="iName" role="cell">{p.name}</span>
                 <span className="hideM" role="cell">{p.client}</span>
-                <span className="hideT hideM" role="cell">{serviceById[p.d].name}</span>
+                <span className="hideT hideM" role="cell">{disciplineLabel(p)}</span>
                 <span className="num hideM" role="cell">{p.year}</span>
                 <span className="iArw"><Arrow /></span>
               </Case>

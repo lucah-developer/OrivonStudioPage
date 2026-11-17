@@ -14,7 +14,9 @@ export default function Contact() {
             <dl className="coInfo">
               <div data-aos="o-blur"><dt>Email</dt><dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd></div>
               <div data-aos="o-blur" data-aos-delay="80"><dt>Teléfono</dt><dd><a href={CONTACT.phoneHref}>{CONTACT.phone}</a></dd></div>
-              <div data-aos="o-blur" data-aos-delay="140"><dt>Instagram</dt><dd><a href={CONTACT.instagram} target="_blank" rel="noreferrer">{CONTACT.instagramHandle}</a></dd></div>
+              <div data-aos="o-blur" data-aos-delay="110"><dt>WhatsApp</dt><dd><a href={CONTACT.whatsapp} target="_blank" rel="noreferrer">{CONTACT.phone}</a></dd></div>
+              <div data-aos="o-blur" data-aos-delay="140"><dt>Instagram</dt><dd><a href={CONTACT.instagram} target="_blank" rel="noreferrer">{CONTACT.instagram}</a></dd></div>
+              <div data-aos="o-blur" data-aos-delay="170"><dt>TikTok</dt><dd><a href={CONTACT.tiktok} target="_blank" rel="noreferrer">{CONTACT.tiktok}</a></dd></div>
             </dl>
           </div>
           <div className="coR" data-aos="o-blur">

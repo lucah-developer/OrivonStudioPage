@@ -1,17 +1,19 @@
-import emailjs from '@emailjs/browser';
+import { CONTACT } from '../data.js';
 
-// Misma integración de EmailJS que ya usaba el sitio (IDs, template y nombres de campos).
-const SERVICE_ID = 'service_r5sxqkl';
-const TEMPLATE_ID = 'template_2bmx2jv';
-const PUBLIC_KEY = 'd7XuVC7rlvoQ-olEC';
+/** Arma el mensaje de WhatsApp con lo que cargó la persona en el formulario. */
+export function whatsappContactUrl(values) {
+  const text = [
+    'Hola, quiero iniciar un proyecto.',
+    `Nombre: ${values.name.trim()}`,
+    `Email: ${values.email.trim()}`,
+    `Qué necesito: ${values.type}`,
+    '',
+    values.msg.trim(),
+  ].join('\n');
+  return `${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
+}
 
-export async function sendContact(values) {
-  await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-    name: values.name,
-    email: values.email,
-    company: '',
-    projectType: values.type,
-    budget: '',
-    message: values.msg,
-  }, PUBLIC_KEY);
+export function openWhatsappContact(values) {
+  const url = whatsappContactUrl(values);
+  return window.open(url, '_blank', 'noopener,noreferrer');
 }

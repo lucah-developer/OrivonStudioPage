@@ -16,16 +16,20 @@ export default function Footer() {
           </div>
           <nav className="ftCol" aria-label="Pie de página" data-aos="o-blur" data-aos-delay="60">
             <h6>Navegación</h6>
-            <Link to="/proyectos">Proyectos</Link><Link to="/#servicios">Servicios</Link><Link to="/estudio">Estudio</Link><Link to="/iniciar-proyecto">Iniciar proyecto</Link>
+            <Link to="/proyectos">Proyectos</Link><Link to="/servicios">Servicios</Link><Link to="/estudio">Estudio</Link><Link to="/iniciar-proyecto">Iniciar proyecto</Link>
           </nav>
           <div className="ftCol" data-aos="o-blur" data-aos-delay="110">
             <h6>Contacto</h6>
-            <a href={`mailto:${CONTACT.email}`}><FiMail aria-hidden="true" /> Email</a>
+            <a href={`mailto:${CONTACT.email}`}><FiMail aria-hidden="true" /> {CONTACT.email}</a>
             <a href={CONTACT.phoneHref}><FiPhone aria-hidden="true" /> {CONTACT.phone}</a>
           </div>
           <div className="ftCol" data-aos="o-blur" data-aos-delay="150">
             <h6>Redes</h6>
             <a href={CONTACT.instagram} target="_blank" rel="noreferrer"><FiInstagram aria-hidden="true" /> Instagram</a>
+            <a href={CONTACT.tiktok} target="_blank" rel="noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M14.5 3c.4 2.4 1.8 4.1 4.1 4.5v2.7c-1.4 0-2.7-.4-3.9-1.2v6.4c0 3.3-2.6 6-6 6.1-3.5 0-6.2-2.8-6.2-6.2 0-3.4 2.7-6.1 6.1-6.2.4 0 .8 0 1.2.1v2.9c-.4-.2-.8-.3-1.2-.3-1.8 0-3.3 1.5-3.3 3.4 0 1.9 1.5 3.4 3.4 3.4s3.2-1.4 3.2-3.3V3h2.6z" /></svg>
+              TikTok
+            </a>
           </div>
         </div>
         <p className="ftWord" aria-hidden="true"><span data-aos="o-rise" data-aos-duration="1200">Orivon<sup>studio</sup></span></p>

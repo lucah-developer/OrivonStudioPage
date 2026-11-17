@@ -29,6 +29,10 @@ export function startSmoothScroll() {
     current = target = window.scrollY;
   }, { passive: true });
 
+  window.__orivonScrollTo = (y) => {
+    target = Math.min(limit(), Math.max(0, y));
+  };
+
   document.addEventListener("click", (event) => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
@@ -54,4 +58,13 @@ export function startSmoothScroll() {
     window.scrollTo(0, current);
     ScrollTrigger.update();
   });
+}
+
+/** Lleva un nodo al borde superior, usando el scroll suave si está activo. */
+export function scrollToElement(node) {
+  if (!node) return;
+  const margin = parseFloat(getComputedStyle(node).scrollMarginTop) || 0;
+  const y = Math.max(0, node.getBoundingClientRect().top + window.scrollY - margin);
+  if (typeof window.__orivonScrollTo === "function") window.__orivonScrollTo(y);
+  else node.scrollIntoView({ behavior: "smooth", block: "start" });
 }

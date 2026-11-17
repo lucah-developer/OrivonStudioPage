@@ -16,7 +16,7 @@ export default function StartProject() {
   return (
     <div className="sp">
       <header className="wrap spHd">
-        <TopRow left="Iniciar proyecto" right="Te respondemos por email" />
+        <TopRow left="Iniciar proyecto" right="Te respondemos por WhatsApp" />
         <h1 className="disp spH1">
           <Line i={0}>Contanos</Line>
           <Line i={1}><span className="ser">tu idea.</span></Line>

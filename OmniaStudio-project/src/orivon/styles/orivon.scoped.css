@@ -13,7 +13,6 @@
   --t1: 200ms; --t2: 420ms; --t3: 800ms;
   --pad: clamp(20px, 5vw, 96px);
 }
- { background: var(--cream); }
 .ov { margin: 0; background: var(--cream); color: var(--deep); font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 .ov *, .ov *::before, .ov *::after { box-sizing: border-box; }
 .ov img { max-width: 100%; display: block; }
@@ -339,8 +338,9 @@
 /* ---------- 09 CONTACT ---------- */
 .ov .coS { background: var(--cream); padding: clamp(72px, 9vw, 140px) 0; }
 .ov .coGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; margin-top: clamp(48px, 6vw, 96px); }
-.ov .coL { grid-column: 1 / span 5; display: flex; flex-direction: column; gap: 36px; }
-.ov .coH1 { font-size: clamp(48px, 9.4vw, 140px); }
+.ov .coL { grid-column: 1 / span 5; display: flex; flex-direction: column; gap: 36px; container-type: inline-size; }
+.ov .coH1 { font-size: clamp(44px, 15.2cqi, 104px); }
+.ov .coH1 .mask { padding-right: 0.08em; padding-bottom: 0.14em; }
 .ov .lead { margin: 0; font-size: 19px; line-height: 1.55; max-width: 420px; }
 .ov .coInfo { margin: 0; border-top: 1px solid var(--deep); }
 .ov .coInfo div { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid rgba(11, 44, 74, 0.18); font-size: 15px; }
@@ -393,13 +393,15 @@
 .ov .ftLogo span { font-family: Manrope, sans-serif; font-weight: 500; font-size: 22px; line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; }
 .ov .ftBrand p { margin: 0; font-size: 15px; line-height: 1.55; color: rgba(250, 242, 232, 0.74); max-width: 300px; }
 .ov .ftCol { grid-column: span 2; display: flex; flex-direction: column; gap: 10px; }
-.ov .ftCol:first-of-type { grid-column: 7 / span 2; }
+.ov .ftCol:first-of-type { grid-column: 6 / span 2; }
+.ov .ftCol:nth-of-type(2) { grid-column: 8 / span 3; }
+.ov .ftCol:nth-of-type(3) { grid-column: 11 / span 2; }
 .ov .ftCol h6 { margin: 0 0 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(250, 242, 232, 0.62); }
-.ov .ftCol a { text-decoration: none; font-size: 15px; font-weight: 500; display: inline-flex; gap: 8px; min-height: 32px; align-items: center; transition: color var(--t1) ease; }
+.ov .ftCol a { text-decoration: none; font-size: 15px; font-weight: 500; display: inline-flex; gap: 8px; min-height: 32px; align-items: center; transition: color var(--t1) ease; white-space: nowrap; }
 .ov .ftCol a:hover { color: var(--orange); }
-.ov .ftWord { font-family: Archivo, sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.075em; line-height: 0.74; font-size: clamp(80px, 20.5vw, 300px); margin: clamp(64px, 8vw, 120px) 0 0 -0.04em; white-space: nowrap; overflow: hidden; padding-top: 0.02em; }
+.ov .ftWord { font-family: Archivo, sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.075em; line-height: 0.74; font-size: clamp(80px, 20.5vw, 300px); margin: clamp(64px, 8vw, 120px) 0 0 -0.04em; white-space: nowrap; overflow: hidden; padding-top: 0.14em; }
 .ov .ftWord > span { display: flex; align-items: flex-start; }
-.ov .ftWord sup { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 0.13em; letter-spacing: 0; color: var(--orange); margin: 0.15em 0 0 0.25em; line-height: 1; }
+.ov .ftWord sup { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 0.13em; letter-spacing: 0; color: var(--orange); margin: 0.2em 0 0 0.25em; line-height: 1; padding-top: 0.12em; }
 .ov .ftBar { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; padding: 22px 0 28px; border-top: 1px solid rgba(250, 242, 232, 0.18); margin-top: clamp(24px, 3vw, 40px); font-size: 13px; color: rgba(250, 242, 232, 0.72); }
 .ov .toTop { all: unset; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; min-height: 44px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); }
 .ov .toTop:hover { color: var(--orange); }
@@ -492,7 +494,8 @@
   .ov .prin { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ov .pr:nth-child(2) { border-right: 0; } .ov .pr:nth-child(3) { padding-left: 0; } .ov .pr:nth-child(n+3) { border-top: 1px solid rgba(11, 44, 74, 0.18); }
   .ov .tsR { margin-top: 48px; } .ov .tsNav { flex-direction: row; overflow-x: auto; } .ov .tsBtn { min-width: 220px; padding-right: 20px; } .ov .tsBtn.on { transform: none; }
   .ov .coR { margin-top: 64px; }
-  .ov .ftCol, .ov .ftCol:first-of-type { grid-column: span 4; }
+  .ov .ftCol, .ov .ftCol:first-of-type, .ov .ftCol:nth-of-type(2), .ov .ftCol:nth-of-type(3) { grid-column: span 4; }
+  .ov .ftCol a { white-space: normal; }
   .ov .featMeta h2, .ov .featCopy { grid-column: 1 / -1; }
   .ov .card.sA, .ov .card.sB, .ov .card.sC, .ov .card.sD { grid-column: span 6; margin-top: 0; }
   .ov .ihead, .ov .irow { grid-template-columns: 48px minmax(0, 2fr) minmax(0, 1.4fr) 70px 40px; } .ov .hideT { display: none; }
@@ -531,7 +534,7 @@
   .ov .qt { font-size: 26px; }
   .ov .f2 { grid-template-columns: 1fr; } .ov .fld input, .ov .fld textarea { font-size: 17px; }
   .ov .send { flex-direction: column-reverse; align-items: stretch; } .ov .sbtn { justify-content: space-between; }
-  .ov .ftCol, .ov .ftCol:first-of-type { grid-column: span 6; }
+  .ov .ftCol, .ov .ftCol:first-of-type, .ov .ftCol:nth-of-type(2), .ov .ftCol:nth-of-type(3) { grid-column: span 6; }
   .ov .pjH1 .ser { padding-left: 0; } .ov .pjLead { grid-column: 1 / -1; }
   .ov .featImg { aspect-ratio: 4 / 3; }
   .ov .featMeta .go, .ov .featShots { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 8px; }
