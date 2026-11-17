@@ -1,22 +1,23 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { FiGrid, FiList } from 'react-icons/fi';
 import { PROJECTS, SERVICES, serviceById } from '../data.js';
 import { TopRow, Line, Arrow } from '../components/Reveal.jsx';
 import Footer from '../sections/Footer.jsx';
 import { scrollToElement } from '../../smoothScroll.js';
+import NotFound from './NotFound.jsx';
 
 const SPANS = ['sA', 'sB', 'sC', 'sD', 'sD', 'sE', 'sA'];
 const TONES = ['deep', 'sand', 'navy', 'sand', 'deep', 'navy', 'sand'];
 
-function Ph({ tone, label, n, img, fit, video }) {
+function Ph({ tone, label, n, img, fit, video, alt = '' }) {
   return (
     <div className={clsx('ph', tone, (img || video) && 'hasImg')}>
       {video ? (
-        <video className="phImg phVideo" src={video} poster={img || undefined} muted loop playsInline autoPlay />
+        <video className="phImg phVideo" src={video} poster={img || undefined} muted loop playsInline autoPlay aria-label={alt || undefined} />
       ) : img ? (
-        <img className={clsx('phImg', fit === 'contain' && 'contain')} src={img} alt="" loading="lazy" />
+        <img className={clsx('phImg', fit === 'contain' && 'contain')} src={img} alt={alt} loading="lazy" />
       ) : null}
       <div className="phRow"><span className="lab">{label}</span><i className="dot" /></div>
       <div className="phRow"><b>{n}</b></div>
@@ -24,28 +25,28 @@ function Ph({ tone, label, n, img, fit, video }) {
   );
 }
 
-function Case({ onOpen, slug, children, ...rest }) {
+function Case({ slug, children, ...rest }) {
   return (
-    <button type="button" {...rest} data-cursor="view" data-cursor-label="Ver detalle" onClick={() => onOpen(slug)}>
+    <Link to={`/proyectos/${slug}#detalle`} {...rest} data-cursor="view" data-cursor-label="Ver detalle">
       {children}
-    </button>
+    </Link>
   );
 }
 
 export default function Projects() {
   const [filter, setFilter] = useState('all');
   const [view, setView] = useState('gal');
+  const { slug: routeSlug } = useParams();
   const [params] = useSearchParams();
-  const requested = params.get('proyecto');
-  const [active, setActive] = useState(() => {
-    const slug = new URLSearchParams(window.location.search).get('proyecto');
-    const known = PROJECTS.find((p) => p.slug === slug);
-    return (known || PROJECTS.find((p) => p.featured) || PROJECTS[0]).slug;
-  });
+  const { hash } = useLocation();
+  const navigate = useNavigate();
+  const querySlug = params.get('proyecto');
+  const requested = routeSlug || querySlug;
+  const known = PROJECTS.find((p) => p.slug === requested);
   const [gallery, setGallery] = useState(false);
   const [shot, setShot] = useState(0);
   const opened = useRef(false);
-  const detail = PROJECTS.find((p) => p.slug === active) || PROJECTS[0];
+  const detail = known || PROJECTS.find((p) => p.featured) || PROJECTS[0];
   const matches = useMemo(
     () => PROJECTS.filter((p) => filter === 'all' || (p.ds || [p.d]).includes(filter)),
     [filter],
@@ -59,17 +60,11 @@ export default function Projects() {
   };
   const listKey = `${filter}-${view}-${detail.slug}`;
 
-  const openDetail = (slug) => {
-    if (slug === detail.slug) {
-      scrollToElement(document.getElementById('detalle'));
-      return;
-    }
-    setActive(slug);
-  };
-
   useEffect(() => {
-    if (requested && PROJECTS.some((p) => p.slug === requested)) setActive(requested);
-  }, [requested]);
+    if (querySlug && PROJECTS.some((p) => p.slug === querySlug)) {
+      navigate(`/proyectos/${querySlug}${hash || '#detalle'}`, { replace: true });
+    }
+  }, [querySlug, hash, navigate]);
 
   useEffect(() => {
     setGallery(false);
@@ -83,7 +78,7 @@ export default function Projects() {
     }
     const frame = requestAnimationFrame(() => scrollToElement(document.getElementById('detalle')));
     return () => cancelAnimationFrame(frame);
-  }, [active]);
+  }, [detail.slug]);
 
   const shots = detail.images?.length ? detail.images : [];
   const showShots = !detail.href && shots.length > 0;
@@ -98,6 +93,8 @@ export default function Projects() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [gallery, shots.length]);
+
+  if (routeSlug && !known) return <NotFound />;
 
   return (
     <div className="pj">
@@ -114,7 +111,7 @@ export default function Projects() {
 
           <article className="feat" id="detalle">
             <div className="featImg">
-              <Ph tone="navy" label={disciplineLabel(detail)} n={num(detail)} img={detail.cover} fit={detail.fit} video={detail.video} />
+              <Ph tone="navy" label={disciplineLabel(detail)} n={num(detail)} img={detail.cover} fit={detail.fit} video={detail.video} alt={detail.name} />
             </div>
             <div className="featMeta">
               <h2 className="disp">{detail.name}</h2>
@@ -173,7 +170,7 @@ export default function Projects() {
         {shown.length > 0 && view === 'gal' && (
           <div className="gal" key={listKey}>
             {shown.map((p, i) => (
-              <Case key={p.slug} slug={p.slug} onOpen={openDetail} className={clsx('card', shown.length === 1 ? 'sE' : SPANS[i % SPANS.length])} style={{ animationDelay: `${Math.round(70 * Math.sqrt(i) * 1.4)}ms` }}>
+              <Case key={p.slug} slug={p.slug} className={clsx('card', shown.length === 1 ? 'sE' : SPANS[i % SPANS.length])} style={{ animationDelay: `${Math.round(70 * Math.sqrt(i) * 1.4)}ms` }}>
                 <div className="cImg"><Ph tone={TONES[i % TONES.length]} label={disciplineLabel(p)} n={num(p)} img={p.cover} fit={p.fit} video={p.video} /></div>
                 <div className="cMeta">
                   <span className="num">{num(p)}</span>
@@ -193,7 +190,7 @@ export default function Projects() {
               <span className="lab hideM" role="columnheader">Año</span><span />
             </div>
             {shown.map((p, i) => (
-              <Case key={p.slug} slug={p.slug} onOpen={openDetail} className="irow" role="row" style={{ animationDelay: `${Math.min(i, 6) * 45}ms` }}>
+              <Case key={p.slug} slug={p.slug} className="irow" role="row" style={{ animationDelay: `${Math.min(i, 6) * 45}ms` }}>
                 <span className="num" role="cell">{num(p)}</span>
                 <span className="iName" role="cell">{p.name}</span>
                 <span className="hideM" role="cell">{p.client}</span>
@@ -216,7 +213,7 @@ export default function Projects() {
       {gallery && showShots && (
         <div className="shotBox" role="dialog" aria-modal="true" aria-label={`Imágenes de ${detail.name}`}>
           <button type="button" className="shotClose" onClick={() => setGallery(false)}>Cerrar</button>
-          <img src={shots[shot]} alt="" />
+          <img src={shots[shot]} alt={`${detail.name}, imagen ${shot + 1} de ${shots.length}`} />
           <div className="shotNav">
             <button type="button" onClick={() => setShot((index) => (index - 1 + shots.length) % shots.length)} disabled={shots.length < 2}>Anterior</button>
             <span>{String(shot + 1).padStart(2, '0')} / {String(shots.length).padStart(2, '0')}</span>

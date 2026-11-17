@@ -12,50 +12,17 @@ import Projects from "./orivon/pages/Projects";
 import About from "./orivon/pages/About";
 import StartProject from "./orivon/pages/StartProject";
 import ServicesPage from "./orivon/pages/ServicesPage";
+import NotFound from "./orivon/pages/NotFound";
+import { applyRouteMeta } from "./orivon/seo.js";
 import "./orivon/styles/orivon.scoped.css";
 import "./orivon/styles/services.scoped.css";
 import "./orivon/styles/orivon.overrides.css";
-
-const SITE = "Orivon Studio";
-const META = {
-  "/": {
-    title: "Orivon Studio — Diseño, desarrollo y dirección creativa",
-    description: "Orivon Studio diseña y desarrolla marcas, sitios y productos digitales. Dirección creativa, diseño y desarrollo a medida.",
-  },
-  "/proyectos": {
-    title: `Proyectos — ${SITE}`,
-    description: "Proyectos de Orivon Studio: reservas, CRM, tiendas, landings y plataformas diseñadas y desarrolladas a medida.",
-  },
-  "/servicios": {
-    title: `Servicios — ${SITE}`,
-    description: "Brand, web, plataformas a medida, e-commerce e IA: qué incluye cada servicio de Orivon Studio y cómo trabajamos.",
-  },
-  "/estudio": {
-    title: `Estudio — ${SITE}`,
-    description: "Somos Orivon: un estudio digital independiente que diseña y desarrolla experiencias web, plataformas, apps y agentes inteligentes.",
-  },
-  "/iniciar-proyecto": {
-    title: `Iniciar proyecto — ${SITE}`,
-    description: "Contanos tu idea: marca, sitio, plataforma, e-commerce o automatización. Te respondemos por WhatsApp.",
-  },
-};
 
 function PageMeta() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname.startsWith("/dev")) {
-      document.title = "Superficie de esferas — Orivon";
-      return;
-    }
-    const meta = META[pathname] || META["/"];
-    const url = `${location.origin}${pathname}`;
-    document.title = meta.title;
-    document.querySelector('meta[name="description"]')?.setAttribute("content", meta.description);
-    document.querySelector('meta[property="og:title"]')?.setAttribute("content", meta.title);
-    document.querySelector('meta[property="og:description"]')?.setAttribute("content", meta.description);
-    document.querySelector('meta[property="og:url"]')?.setAttribute("content", url);
-    document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
+    applyRouteMeta(pathname);
   }, [pathname]);
 
   return null;
@@ -103,12 +70,13 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/proyectos" element={page(<Projects />)} />
+          <Route path="/proyectos/:slug" element={page(<Projects />)} />
           <Route path="/servicios" element={page(<ServicesPage />)} />
           <Route path="/estudio" element={page(<About />)} />
           <Route path="/iniciar-proyecto" element={page(<StartProject />)} />
           <Route path="/portfolio" element={<Navigate to="/proyectos" replace />} />
           <Route path="/dev/beads" element={<BeadLab />} />
-          <Route path="*" element={<HomePage />} />
+          <Route path="*" element={page(<NotFound />)} />
         </Routes>
       </main>
     </div>

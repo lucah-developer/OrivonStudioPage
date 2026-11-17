@@ -6,9 +6,9 @@
     <title>Orivon Studio — Diseño, desarrollo y dirección creativa</title>
     <meta
       name="description"
-      content="Orivon Studio diseña y desarrolla marcas, sitios y productos digitales. Dirección creativa, diseño y desarrollo a medida."
+      content="Estudio de diseño y desarrollo web. Marcas, sitios, plataformas, e-commerce y automatización, con dirección creativa y criterio técnico."
     />
-    <meta name="author" content="Orivon Studios" />
+    <meta name="author" content="Orivon Studio" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#FAF2E8" />
     <meta name="color-scheme" content="light" />
@@ -16,11 +16,11 @@
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_AR" />
-    <meta property="og:site_name" content="Orivon Studios" />
+    <meta property="og:site_name" content="Orivon Studio" />
     <meta property="og:title" content="Orivon Studio — Diseño, desarrollo y dirección creativa" />
     <meta
       property="og:description"
-      content="Orivon Studio diseña y desarrolla marcas, sitios y productos digitales. Dirección creativa, diseño y desarrollo a medida."
+      content="Estudio de diseño y desarrollo web. Marcas, sitios, plataformas, e-commerce y automatización, con dirección creativa y criterio técnico."
     />
     <meta property="og:url" content="" />
     <meta property="og:image" content="/icon-512.png" />
@@ -30,7 +30,7 @@
     <meta name="twitter:title" content="Orivon Studio — Diseño, desarrollo y dirección creativa" />
     <meta
       name="twitter:description"
-      content="Orivon Studio diseña y desarrolla marcas, sitios y productos digitales. Dirección creativa, diseño y desarrollo a medida."
+      content="Estudio de diseño y desarrollo web. Marcas, sitios, plataformas, e-commerce y automatización, con dirección creativa y criterio técnico."
     />
     <meta name="twitter:image" content="/icon-512.png" />
 
@@ -50,11 +50,16 @@
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
       if (!location.hash) scrollTo(0, 0);
 
+      var home = location.origin + "/";
       var pageUrl = location.origin + location.pathname;
       var canonical = document.querySelector('link[rel="canonical"]');
       if (canonical) canonical.href = pageUrl;
       var ogUrl = document.querySelector('meta[property="og:url"]');
       if (ogUrl) ogUrl.content = pageUrl;
+      if (location.pathname.indexOf("/dev") === 0) {
+        var robots = document.querySelector('meta[name="robots"]');
+        if (robots) robots.content = "noindex, nofollow";
+      }
       ["og:image", "twitter:image"].forEach(function (name) {
         var tag = document.querySelector('meta[property="' + name + '"], meta[name="' + name + '"]');
         if (tag && tag.content.startsWith("/")) tag.content = location.origin + tag.content;
@@ -65,31 +70,35 @@
         "@graph": [
           {
             "@type": "ProfessionalService",
-            "@id": pageUrl + "#organization",
-            name: "Orivon Studios",
-            url: pageUrl,
+            "@id": home + "#organization",
+            name: "Orivon Studio",
+            url: home,
             image: location.origin + "/icon-512.png",
             logo: location.origin + "/favicon.svg",
             description:
-              "Estudio de diseño y desarrollo. Construimos marcas, sitios y productos digitales con dirección creativa y criterio técnico.",
+              "Estudio de diseño y desarrollo web. Marcas, sitios, plataformas, e-commerce y automatización, con dirección creativa y criterio técnico.",
             email: "orivonstudio2022@gmail.com",
             telephone: "+54-9-260-430-9716",
             areaServed: "AR",
             address: { "@type": "PostalAddress", addressCountry: "AR" },
-            sameAs: ["https://www.instagram.com/orivonstudio/"],
-            knowsAbout: ["Diseño web", "Desarrollo web", "Experiencias 3D", "UX", "Motion design"]
+            sameAs: [
+              "https://www.instagram.com/orivonstudio/",
+              "https://www.tiktok.com/@orivonstudio"
+            ],
+            knowsAbout: ["Diseño web", "Desarrollo web", "Identidad de marca", "E-commerce", "Plataformas a medida", "Automatización"]
           },
           {
             "@type": "WebSite",
-            "@id": pageUrl + "#website",
-            url: pageUrl,
-            name: "Orivon Studios",
+            "@id": home + "#website",
+            url: home,
+            name: "Orivon Studio",
             inLanguage: "es-AR",
-            publisher: { "@id": pageUrl + "#organization" }
+            publisher: { "@id": home + "#organization" }
           }
         ]
       };
       var script = document.createElement("script");
+      script.id = "orivon-ld";
       script.type = "application/ld+json";
       script.text = JSON.stringify(data);
       document.head.appendChild(script);

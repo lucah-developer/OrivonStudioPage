@@ -439,9 +439,9 @@
 .ov .status { margin: 22px 0 0; display: flex; justify-content: space-between; gap: 16px; color: rgba(11, 44, 74, 0.72); }
 .ov .gal { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; row-gap: clamp(48px, 6vw, 96px); margin-top: 40px; align-items: start; }
 .ov .card { display: flex; flex-direction: column; gap: 18px; text-decoration: none; animation: ov-cardIn 800ms var(--ease-out) both; }
-.ov button.card, .ov button.irow { background: transparent; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; width: 100%; }
-.ov button.card { padding: 0; }
-.ov button.card:focus-visible, .ov button.irow:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
+.ov button.card, .ov button.irow, .ov a.card, .ov a.irow { background: transparent; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; width: 100%; }
+.ov button.card, .ov a.card { padding: 0; }
+.ov button.card:focus-visible, .ov button.irow:focus-visible, .ov a.card:focus-visible, .ov a.irow:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
 .ov .card.sA { grid-column: span 7; } .ov .card.sB { grid-column: 8 / span 5; margin-top: clamp(64px, 10vw, 160px); }
 .ov .card.sC { grid-column: 2 / span 5; } .ov .card.sD { grid-column: span 6; } .ov .card.sE { grid-column: 1 / -1; }
 @keyframes ov-cardIn { from { opacity: 0; clip-path: inset(18% 0 0 0); transform: translateY(40px); } to { opacity: 1; clip-path: inset(0 0 0 0); transform: none; } }

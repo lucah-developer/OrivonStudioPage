@@ -208,7 +208,7 @@ export default function SelectedWork() {
         {WORK.map((project, index) => (
           <Link
             key={project.slug}
-            to={`/proyectos?proyecto=${project.slug}#detalle`}
+            to={`/proyectos/${project.slug}#detalle`}
             data-index={index}
             className="orivon-index__row"
             data-cursor="view"
@@ -260,7 +260,7 @@ export default function SelectedWork() {
             <button type="button" ref={closeRef} onClick={() => setOpen(null)}>Cerrar</button>
           </div>
           <div className={`orivon-case__frame${current.fit === "contain" ? " is-contain" : ""}`}>
-            <img src={current.cover} alt="" width={current.width} height={current.height} />
+            <img src={current.cover} alt={current.name} width={current.width} height={current.height} />
           </div>
           <div className="orivon-case__bar orivon-case__bar--foot">
             <p>
