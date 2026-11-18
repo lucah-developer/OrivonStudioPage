@@ -62,6 +62,7 @@
 .ov .navLinks a { font-size: 13px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; position: relative; }
 .ov .navLinks a.cur::after { content: ""; position: absolute; left: 0; right: 0; bottom: 8px; height: 2px; background: var(--orange); }
 .ov .navLinks .navCta { background: var(--orange); color: var(--navy); padding: 0 18px; transition: background var(--t1) ease, color var(--t1) ease; }
+.ov .navToggle { display: none; }
 .ov .navLinks .navCta:hover { background: var(--navy); color: var(--cream); }
 
 /* ---------- BUTTONS ---------- */
@@ -508,7 +509,11 @@
 
 /* ---------- MOBILE ---------- */
 @media (max-width: 700px) {
-  .ov .navLinks a:not(.navCta) { display: none; }
+  .ov .navToggle { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid var(--deep); background: transparent; color: var(--deep); font: 700 13px/1 Manrope, sans-serif; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; }
+  .ov .navLinks { display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 40; flex-direction: column; align-items: stretch; gap: 0; padding: 8px var(--pad) 18px; background: rgba(250, 242, 232, 0.98); border-bottom: 1px solid rgba(11, 44, 74, 0.14); }
+  .ov .navLinks.is-open { display: flex; }
+  .ov .navLinks a { min-height: 48px; }
+  .ov .navLinks .navCta { justify-content: center; margin-top: 8px; }
   .ov .toprow { flex-direction: column; gap: 8px; }
   .ov .hero { padding-top: 24px; }
   .ov .heroFoot .lab:last-child { display: none; }
@@ -541,7 +546,21 @@
   .ov .bar { flex-direction: column; align-items: stretch; } .ov .chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; } .ov .chip { flex: none; } .ov .views { align-self: flex-start; }
   .ov .card.sA, .ov .card.sB, .ov .card.sC, .ov .card.sD, .ov .card.sE { grid-column: 1 / -1; } .ov .sE .ph { aspect-ratio: 4 / 3; }
   .ov .ihead { display: none; } .ov .irow { grid-template-columns: 32px minmax(0, 1fr) 40px; } .ov .hideM { display: none; }
-  .ov .close .disp { font-size: 40px; }
+  .ov .close .disp { font-size: 36px; }
+  .ov .svcH1 { font-size: clamp(36px, 10.4vw, 52px); }
+  .ov .apH1 { font-size: clamp(34px, 9.6vw, 48px); }
+  .ov .stH1 { font-size: clamp(36px, 9.6vw, 48px); }
+  .ov .noise { flex-wrap: nowrap; }
+  .ov .tsH { font-size: clamp(40px, 11vw, 52px); }
+  .ov .ctaH { font-size: clamp(38px, 10.6vw, 52px); }
+  .ov .pjH1 { font-size: clamp(40px, 11.4vw, 56px); }
+  .ov .spH1 { font-size: clamp(44px, 12vw, 64px); }
+  .ov .abH1 { font-size: clamp(32px, 8.8vw, 46px); }
+  .ov .abZoomTxt { font-size: clamp(36px, 10vw, 52px); }
+  .ov .abMani { font-size: clamp(26px, 7vw, 36px); }
+  .ov .ftWord { font-size: 15.2vw; }
+  .ov .qt { font-size: 22px; }
+  .ov .toprow { align-items: flex-start; }
 }
 
 /* Reduced motion: menos y más suave, no cero. Se conservan opacidades y colores; se quitan desplazamientos. */

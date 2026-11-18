@@ -1,6 +1,7 @@
 import { PROJECTS, SERVICES, CONTACT, serviceById } from "./data.js";
 
 export const SITE = "Orivon Studio";
+export const SITE_ORIGIN = "https://www.orivonstudio.com.ar";
 
 const ROBOTS_INDEX = "index, follow, max-image-preview:large";
 
@@ -50,7 +51,8 @@ function clip(text, max = 155) {
 }
 
 function absolute(path) {
-  return `${location.origin}${path}`;
+  if (path === "/") return `${SITE_ORIGIN}/`;
+  return `${SITE_ORIGIN}${path}`;
 }
 
 function organization() {
@@ -60,8 +62,8 @@ function organization() {
     "@id": `${home}#organization`,
     name: SITE,
     url: home,
-    image: `${location.origin}/icon-512.png`,
-    logo: `${location.origin}/favicon.svg`,
+    image: `${SITE_ORIGIN}/icon-512.png`,
+    logo: `${SITE_ORIGIN}/favicon.svg`,
     description: PAGES["/"].description,
     email: CONTACT.email,
     telephone: "+54-9-260-430-9716",

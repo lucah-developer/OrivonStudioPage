@@ -20,9 +20,24 @@ function robotsTxt(origin) {
   return `User-agent: *\nAllow: /\n\nDisallow: /dev/\nDisallow: /videos/\n\nSitemap: ${origin}/sitemap.xml\n`
 }
 
-function siteOrigin(fallback) {
+const SITE_ORIGIN = 'https://www.orivonstudio.com.ar'
+
+function siteOrigin() {
   const fromEnv = process.env.VITE_SITE_URL?.trim().replace(/\/$/, '')
-  return fromEnv || fallback
+  return fromEnv || SITE_ORIGIN
+}
+
+// En Windows, Vite a veces agrega ?v= a env.mjs y deja __DEFINES__ sin reemplazar.
+function fixViteEnvDefines() {
+  return {
+    name: 'orivon-vite-env-defines',
+    apply: 'serve',
+    transform(code, id) {
+      if (id.includes('vite/dist/client/env.mjs') && code.includes('__DEFINES__')) {
+        return code.replace('__DEFINES__', '{}')
+      }
+    },
+  }
 }
 
 function seoFiles() {
@@ -32,14 +47,13 @@ function seoFiles() {
       server.middlewares.use((req, res, next) => {
         const path = req.url?.split('?')[0]
         if (path !== '/sitemap.xml' && path !== '/robots.txt') return next()
-        const origin = siteOrigin(`${req.socket.encrypted ? 'https' : 'http'}://${req.headers.host}`)
+        const origin = siteOrigin()
         res.setHeader('Content-Type', path === '/sitemap.xml' ? 'application/xml' : 'text/plain')
         res.end(path === '/sitemap.xml' ? sitemapXml(origin) : robotsTxt(origin))
       })
     },
     generateBundle() {
-      const origin = siteOrigin('')
-      if (!origin) return
+      const origin = siteOrigin()
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(origin) })
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robotsTxt(origin) })
     },
@@ -54,6 +68,7 @@ export default defineConfig({
         plugins: [['babel-plugin-react-compiler']],
       },
     }),
+    fixViteEnvDefines(),
     seoFiles(),
   ],
 })

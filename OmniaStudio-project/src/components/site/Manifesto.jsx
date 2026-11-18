@@ -72,9 +72,22 @@ export default function Manifesto() {
     const texts = [...root.querySelectorAll(".orivon-essence__wipe")];
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const narrow = window.matchMedia("(max-width: 1000px)").matches;
+    const phone = window.matchMedia("(max-width: 799px)").matches;
     let ctx;
 
     const fit = () => {
+      const onPhone = window.matchMedia("(max-width: 799px)").matches;
+      if (onPhone) {
+        lines.forEach((line) => {
+          line.style.fontSize = "160px";
+        });
+        const textWidth = lines[0].scrollWidth || 1;
+        const px = (window.innerWidth * 0.98 / textWidth) * 160;
+        lines.forEach((line) => {
+          line.style.fontSize = `${px}px`;
+        });
+        return;
+      }
       const target = window.innerWidth * 0.995;
       lines.forEach((line) => {
         line.style.fontSize = "18vw";
@@ -137,8 +150,8 @@ export default function Manifesto() {
           },
         });
 
-        const stackScroll = 1.35;
-        const shrinkScroll = 0.52;
+        const stackScroll = phone ? 0.7 : 1.35;
+        const shrinkScroll = phone ? 0.36 : 0.52;
         const pinScroll = stackScroll + shrinkScroll;
 
         ScrollTrigger.create({
@@ -159,9 +172,9 @@ export default function Manifesto() {
               gsap.set(lines[2], { x: 0, y: `${yProgress * -100}%`, scale: 1 });
             } else {
               const scaleProgress = (self.progress - stackEnd) / (1 - stackEnd);
-              const minScale = narrow ? 0.36 : 0.2;
+              const minScale = phone ? 0.72 : narrow ? 0.36 : 0.2;
               const scale = 1 - scaleProgress * (1 - minScale);
-              gsap.set(stack, { y: scaleProgress * window.innerHeight * 0.18 });
+              gsap.set(stack, { y: scaleProgress * window.innerHeight * (phone ? -0.12 : 0.18) });
               gsap.set(lines[0], { x: 0, y: "100%", scale });
               gsap.set(lines[1], { x: 0, y: 0, scale });
               gsap.set(lines[2], { x: 0, y: "-100%", scale });

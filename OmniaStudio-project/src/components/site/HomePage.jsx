@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import gsap from "gsap";
 import HeroLogo from "./HeroLogo";
@@ -22,6 +22,14 @@ export default function HomePage() {
   const rootRef = useRef(null);
   const openRef = useRef(null);
   const { hash } = useLocation();
+  const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 799px)").matches);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 799px)");
+    const onChange = () => setCompact(query.matches);
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     const id = HASH_ALIAS[hash.slice(1)];
@@ -48,7 +56,7 @@ export default function HomePage() {
     const restPose = () => {
       gsap.set(open, { autoAlpha: 0 });
       gsap.set(lines, { yPercent: 0 });
-      gsap.set([leadCopy, actions, mark, nav], { autoAlpha: 1, y: 0, clearProps: "clipPath" });
+      gsap.set([leadCopy, actions, mark, nav].filter(Boolean), { autoAlpha: 1, y: 0, clearProps: "clipPath" });
       html.classList.remove("orivon-intro");
     };
 
@@ -64,7 +72,7 @@ export default function HomePage() {
       gsap.set(lines, { yPercent: 115 });
       gsap.set(leadCopy, { autoAlpha: 0, y: 16 });
       gsap.set(actions, { autoAlpha: 0, y: 14 });
-      gsap.set(mark, { clipPath: "inset(0 0 0 100%)" });
+      if (mark) gsap.set(mark, { clipPath: "inset(0 0 0 100%)" });
       if (nav) gsap.set(nav, { autoAlpha: 0, y: -12 });
 
       const tl = gsap.timeline({
@@ -79,9 +87,9 @@ export default function HomePage() {
         .to(left, { xPercent: -100, duration: 1.45, ease: "power2.inOut" }, "+=0.45")
         .to(right, { xPercent: 100, duration: 1.45, ease: "power2.inOut" }, "<")
         .to(word, { autoAlpha: 0, duration: 0.5, ease: "power2.in" }, "<0.2")
-        .to(lines, { yPercent: 0, duration: 1.15, stagger: 0.14, ease: "power3.out" }, "-=0.7")
-        .to(mark, { clipPath: "inset(0 0 0 0%)", duration: 1.35, ease: "power2.inOut" }, "-=1.05")
-        .to(leadCopy, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.55")
+        .to(lines, { yPercent: 0, duration: 1.15, stagger: 0.14, ease: "power3.out" }, "-=0.7");
+      if (mark) tl.to(mark, { clipPath: "inset(0 0 0 0%)", duration: 1.35, ease: "power2.inOut" }, "-=1.05");
+      tl.to(leadCopy, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.55")
         .to(actions, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.55");
       if (nav) tl.to(nav, { autoAlpha: 1, y: 0, duration: 0.75, ease: "power2.out" }, "-=0.7");
     }, root);
@@ -122,9 +130,11 @@ export default function HomePage() {
             <a className="btn btn--ghost" href="#contacto">Hablemos de tu proyecto</a>
           </div>
         </div>
-        <div className="orivon-hero__mark" role="img" aria-label="Logotipo de Orivon">
-          <HeroLogo />
-        </div>
+        {!compact && (
+          <div className="orivon-hero__mark" role="img" aria-label="Logotipo de Orivon">
+            <HeroLogo />
+          </div>
+        )}
       </section>
 
       <Manifesto />

@@ -11,7 +11,7 @@ const OFFS = [[-0.42, 0.28, -14, -40], [0.18, -0.36, 9, 30], [-0.12, 0.44, -6, -
 
 export default function Studio() {
   const word = useRef(null);
-  const scroll = useRef(reducedMotion() ? 0 : 1.4);
+  const scroll = useRef(reducedMotion() || window.matchMedia('(max-width: 700px)').matches ? 0 : 1.4);
   const [nz, setNz] = useState(0);
   const nzRef = useRef(0);
 
@@ -33,6 +33,7 @@ export default function Studio() {
 
   useGsap(() => {
     apply(0);
+    if (window.matchMedia('(max-width: 700px)').matches) return;
     ScrollTrigger.create({
       trigger: word.current, start: 'top bottom', end: 'top 30%', scrub: true,
       onUpdate: (self) => { scroll.current = 1.4 * (1 - self.progress); apply(0.4); },

@@ -236,6 +236,11 @@
 
 .orivon-case__bar--foot button + span { opacity: 0.7; }
 
+@media (max-width: 700px) {
+  .orivon-index__intro h2 { font-size: clamp(2.05rem, 10vw, 2.8rem); }
+  .orivon-index__kicker { gap: 0.6rem; letter-spacing: 0.08em; }
+}
+
 @media (max-width: 860px) {
   .orivon-index { width: min(1440px, calc(100% - 1.6rem)); }
   .orivon-index__kicker,

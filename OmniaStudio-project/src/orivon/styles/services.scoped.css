@@ -172,4 +172,10 @@
 .ov .sv2 .close .disp { font-size: clamp(40px, 7vw, 108px); }
 .ov .sv2 .close svg { width: clamp(40px, 5vw, 72px); height: auto; transition: transform var(--t2) var(--ease-out); }
 .ov .sv2 .close a:hover svg { transform: translateX(14px); }
-@media (max-width: 700px) { .ov .sv2 .close .disp { font-size: 40px; } }
+@media (max-width: 700px) {
+  .ov .sv2H1 { font-size: clamp(32px, 8.4vw, 44px); }
+  .ov .sv2IncH { font-size: clamp(32px, 8.4vw, 44px); }
+  .ov .sv2 .close .disp { font-size: 32px; }
+  .ov .sv2Index { display: flex; gap: 8px; overflow-x: auto; }
+  .ov .sv2Index a { flex: none; }
+}

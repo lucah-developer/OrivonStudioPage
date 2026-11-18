@@ -99,6 +99,30 @@
   .orivon-essence__copy { padding-inline: 1.2rem; }
 }
 
+@media (max-width: 799px) {
+  .orivon-essence__about {
+    height: auto;
+    padding: 2.4rem 1.15rem 0.4rem;
+  }
+  .orivon-essence__about .orivon-essence__wipe {
+    font-size: clamp(2rem, 8.2vw, 2.65rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+  }
+  .orivon-essence__stage { height: 86svh; }
+  .orivon-essence__line { line-height: 0.84; }
+  .orivon-essence__copy {
+    min-height: 0;
+    margin-top: 64svh;
+    padding: 1.5rem 1.15rem 4.5rem;
+  }
+  .orivon-essence__copy .orivon-essence__wipe {
+    font-size: clamp(1.45rem, 5.6vw, 1.8rem);
+    line-height: 1.22;
+    letter-spacing: -0.035em;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .orivon-essence__line:nth-child(1),
   .orivon-essence__line:nth-child(3) { display: none; }

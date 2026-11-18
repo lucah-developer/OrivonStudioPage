@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import AOS from "aos";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -28,19 +28,25 @@ function PageMeta() {
   return null;
 }
 
-/** Anclas (/#servicios) y refresco de AOS/ScrollTrigger al cambiar de página. */
+/** Cada página abre en su inicio. Un ancla (#contacto, #detalle) sí baja hasta esa sección. */
 function RouteScroll() {
   const { pathname, hash, search } = useLocation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const id = hash.replace("#", "");
+    const place = () => {
+      ScrollTrigger.clearScrollMemory();
+      const node = id ? document.getElementById(id) : null;
+      if (node) scrollToElement(node, true);
+      else if (typeof window.__orivonScrollTo === "function") window.__orivonScrollTo(0, true);
+      else window.scrollTo(0, 0);
+    };
+
+    place();
     const t = setTimeout(() => {
       AOS.refreshHard();
       ScrollTrigger.refresh();
-      // Después del refresh: ScrollTrigger restaura la posición previa al recalcular.
-      if (id) scrollToElement(document.getElementById(id));
-      else if (typeof window.__orivonScrollTo === "function") window.__orivonScrollTo(0);
-      else window.scrollTo({ top: 0, behavior: "instant" });
+      place();
     }, 60);
     return () => clearTimeout(t);
   }, [pathname, hash, search]);

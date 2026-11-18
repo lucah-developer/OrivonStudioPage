@@ -7,6 +7,7 @@ export default function Cta() {
   const root = useRef(null);
   // Las cuatro líneas convergen en horizontal con el scroll: impares desde la izquierda, pares desde la derecha.
   useGsap(() => {
+    if (window.matchMedia('(max-width: 700px)').matches) return;
     gsap.utils.toArray('.ctaLine').forEach((el, i) => {
       gsap.fromTo(el, { xPercent: i % 2 ? 14 : -14, opacity: 0.25 }, {
         xPercent: 0, opacity: 1, ease: 'none',

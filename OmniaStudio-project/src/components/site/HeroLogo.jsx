@@ -62,14 +62,14 @@ export default function HeroLogo() {
     const frameCamera = () => {
       const width = wrap.clientWidth || 1;
       const height = wrap.clientHeight || 1;
-      const narrow = width < 800;
       camera.aspect = width / height;
-      const fit = narrow ? 0.9 : 1.05;
-      const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
-      const dist = radius / (tan * fit);
-      const shift = narrow ? 0 : radius * 0.1;
-      camera.position.set(radius * 0.05, radius * 0.04, dist);
-      camera.lookAt(shift, -radius * 0.04, 0);
+      const vHalf = THREE.MathUtils.degToRad(camera.fov) * 0.5;
+      const hHalf = Math.atan(Math.tan(vHalf) * camera.aspect);
+      // La silueta de la esfera es más ancha que su radio en el plano central.
+      // Se encuadra por el eje que apriete, para que en pantalla completa no se corte.
+      const dist = (radius * 1.02) / Math.min(Math.sin(vHalf), Math.sin(hHalf));
+      camera.position.set(0, 0, dist);
+      camera.lookAt(0, 0, 0);
       camera.near = Math.max(dist / 80, 0.05);
       camera.far = dist * 10;
       camera.updateProjectionMatrix();

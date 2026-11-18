@@ -88,9 +88,11 @@
 .btn--night { background: var(--night); color: var(--cream); }
 .orivon-hero .btn,
 .studio-nav__cta { transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease; }
-.orivon-hero .btn:hover,
-.studio-nav__cta:hover { background: var(--night); color: var(--cream); transform: translateY(-2px); }
-.orivon-hero .btn--ghost:hover { background: var(--ink); color: var(--cream); }
+@media (hover: hover) and (pointer: fine) {
+  .orivon-hero .btn:hover,
+  .studio-nav__cta:hover { background: var(--night); color: var(--cream); transform: translateY(-2px); }
+  .orivon-hero .btn--ghost:hover { background: var(--ink); color: var(--cream); }
+}
 .btn--ghost {
   background: transparent;
   color: var(--ink);
@@ -554,14 +556,16 @@
   .orivon-hero__copy { max-width: 46vw; padding-bottom: 1.5rem; }
   .orivon-hero__mark {
     position: absolute;
-    top: -12%;
-    right: 0;
-    bottom: -14%;
+    top: 50%;
+    right: clamp(0.4rem, 1.4vw, 1.6rem);
+    bottom: auto;
     z-index: 3;
-    width: 44%;
+    width: min(50%, calc(100dvh - 4.5rem));
     height: auto;
+    aspect-ratio: 1;
     min-height: 0;
     margin: 0;
+    translate: 0 -50%;
   }
   .manifesto { grid-template-columns: 1.4fr 0.8fr; align-items: end; }
   .work-list { grid-template-columns: 1fr 1fr; }
@@ -582,8 +586,12 @@
 }
 
 @media (max-width: 799px) {
-  .orivon-hero__line > span { white-space: normal; }
-  .orivon-hero h1 { font-size: clamp(2.7rem, 13.5vw, 4.2rem); }
+  .orivon-hero { min-height: auto; padding-top: 1.4rem; }
+  .orivon-hero__mark { display: none; }
+  .orivon-hero h1 { font-size: clamp(2.05rem, 10.2vw, 3rem); line-height: 0.9; }
+  .orivon-hero__line > span { white-space: nowrap; }
+  .orivon-hero__actions { display: grid; }
+  .orivon-hero .btn { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
